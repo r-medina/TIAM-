@@ -288,7 +288,7 @@ while get(hObject,'Value')
                                    handles.types{handles.index}...
                                    (handles.whichFrame-handles.startFrame+1)),... 
                                handles);
-
+    % grrrrr
     % This next chunk deals with moving the slider and playing the
     % video correctly
     % handles.sf is just startFrame/manyFrames--just a term I made
