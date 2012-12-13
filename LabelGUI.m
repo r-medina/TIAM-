@@ -24,7 +24,7 @@ function varargout = LabelGUI(varargin)
 
 % Edit the above text to modify the response to help LabelGUI
 
-% Last Modified by GUIDE v2.5 29-Nov-2012 10:01:15
+% Last Modified by GUIDE v2.5 12-Dec-2012 23:06:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -114,10 +114,25 @@ handles.output = hObject;
 
 % Loads the text into the little 
 frameInfoText(handles);
-%makePlot(handles);
 
 set(handles.cellTrack,'Value',handles.index);
 cellTrack_Callback(handles.cellTrack, eventdata, handles)
+
+% Resets the channelPannel
+set(handles.c1,'Value',1)
+set(handles.c2,'Value',0)
+channelPannel_SelectionChangeFcn(handles.channelPannel, ...
+                       struct('EventName','SelectionChanged', ...
+                              'NewValue',handles.c1), ...
+                                 handles)
+
+% Sets recording of types to no
+set(handles.recordY,'Value',0)
+set(handles.recordN,'Value',1)
+typeRecordPanel_SelectionChangeFcn(handles.typeRecordPanel, ...
+                       struct('EventName','SelectionChanged', ...
+                              'NewValue',handles.recordN), ...
+                                 handles)
 
 % Update handles structure
 guidata(hObject, handles);
@@ -146,12 +161,15 @@ function frameSlider_Callback(hObject, eventdata, handles)
 % maps the frame slider position to an equivalent frame
 handles.whichFrame = floor(get(hObject,'Value')*(handles.manyFrames-1))+1;
 
-% fills in the information pannel that displays the current frame
+% fills in the information panel that displays the current frame
 % as well as when the selected cell track starts and stops
 frameInfoText(handles);
 % Graphs the pictures, bounding box, and trajectory
 makePlot(handles);
 guidata(hObject, handles);
+
+% displays for debugging
+%disp(sprintf('from frameSlider_Callback:\t%f',get(handles.frameSlider,'Value')))
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -190,11 +208,15 @@ end
 
 set(handles.positions,'Data',[handles.xPos,handles.yPos,handles.types{handles.index}]);
 set(handles.frameSlider,'Value',handles.sf);
+frameSlider_Callback(handles.frameSlider,[],handles);
 guidata(hObject, handles);
 
+%{
 if ~((get(handles.playButton,'Value')))
     frameSlider_Callback(handles.frameSlider,[],handles);
 else
+%}
+if ((get(handles.playButton,'Value')))
     set(handles.playButton,'Value',0);
     playButton_Callback(handles.playButton,[],handles)
 end
@@ -217,31 +239,17 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes during object creation, after setting all properties.
-function positions_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to positions (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-
-% --- Executes when selected object is changed in uipanel1.
-function uipanel1_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel1 
+% --- Executes when selected object is changed in channelPannel.
+function channelPannel_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in channelPannel 
 % eventdata  structure with the following fields (see UIBUTTONGROUP)
 %	EventName: string 'SelectionChanged' (read only)
 %	OldValue: handle of the previously selected object or empty if none was selected
 %	NewValue: handle of the currently selected object
 % handles    structure with handles and user data (see GUIDATA)
 
-switch handles.ch
-  case 1
-    handles.ch = 2;
-  case 2
-    handles.ch = 1;
-end
-
-guidata(hObject, handles);
-
+% Querying the value of the individual radio buttons by makeplot
+% decides what handles.ch is
 if ~((get(handles.playButton,'Value')))
     makePlot(handles);
 else
@@ -250,6 +258,18 @@ else
     set(handles.playButton,'Value',1);
     playButton_Callback(handles.playButton,[],handles)
 end
+
+guidata(hObject, handles);
+
+
+% --- Executes when selected object is changed in typeRecordPanel.
+function typeRecordPanel_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in typeRecordPanel 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes on button press in playButton.
@@ -265,50 +285,75 @@ startPlay = get(handles.frameSlider,'Value');
 %set(handles.frameSlider,'Value',startPlay);
 %frameSlider_Callback(handles.frameSlider,[],handles);
 
-if ((handles.whichFrame > handles.endFrame) | ...
+if ((handles.whichFrame >= handles.endFrame) | ...
     (startPlay < handles.sf))
     startPlay = handles.sf;
+    set(handles.frameSlider,'Value',startPlay);
+    frameSlider_Callback(handles.frameSlider,[],handles);
+    handles.whichFrame = floor(get(handles.frameSlider,'Value')*(handles.manyFrames-1))+1;
+    %handles.whichFrame = startPlay;
 end
 
+j = false;
 i = 0;
 while get(hObject,'Value')
+    j = true;
     % Edits cell type
-
-    if ((i == 0) & ...
-        (handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) ...
-         ~= -1))
-        handles.t = handles.types{handles.index}(handles.whichFrame-handles.startFrame+1);
+    if (get(handles.recordY,'Value'))
+        if ((i == 0) & ...
+            (handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) ...
+             ~= -1))
+            handles.t = handles.types{handles.index}(handles.whichFrame-handles.startFrame+1);
+        end
+        handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) = ...
+            positions_CellEditCallback(handles.positions, ...
+                                       struct( ...
+                                           'Indices',[handles.whichFrame,3], ...
+                                           'EditData',num2str(handles.t),'NewData', ...
+                                           handles.t,'Error',[],...
+                                           'PreviousData',...
+                                           handles.types{handles.index}...
+                                           (handles.whichFrame-handles.startFrame+1)),... 
+                                       handles);
     end
-    handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) = ...
-    positions_CellEditCallback(handles.positions, ...
-                               struct( ...
-                                   'Indices',[handles.whichFrame,3], ...
-                                   'EditData',num2str(handles.t),'NewData',handles.t,'Error',[],...
-                                   'PreviousData',...
-                                   handles.types{handles.index}...
-                                   (handles.whichFrame-handles.startFrame+1)),... 
-                               handles);
-    % grrrrr
     % This next chunk deals with moving the slider and playing the
     % video correctly
     % handles.sf is just startFrame/manyFrames--just a term I made
     % a variable to reduce clutter
-    set(handles.frameSlider,'Value', ...
-                      (mod(1000.*(startPlay-handles.sf+i/handles.manyFrames), ...
-                           trackLen*1000./handles.manyFrames)...
-                       +(handles.sf)*1000.)/1000.);
+    newFrVal = startPlay-handles.sf+i/handles.manyFrames+handles.sf;
+    % Prints value for debugging
+    set(handles.frameSlider,'Value',newFrVal);
     frameSlider_Callback(handles.frameSlider,[],handles);
     handles.whichFrame = floor(get(handles.frameSlider,'Value')*(handles.manyFrames-1))+1;
-    %{
-    disp('new round')
-    handles.whichFrame-handles.startFrame+1
-    handles.whichFrame
-    %}
-    guidata(hObject, handles);
+    %disp(sprintf('from playButton_Callback:\t%f',get(handles.frameSlider,'Value')))
+    if ((handles.whichFrame+1) > handles.endFrame)
+       set(handles.playButton,'Value',0);
+    end
     set(handles.positions,'Data',[handles.xPos,handles.yPos,handles.types{handles.index}]);
+    guidata(hObject, handles);
     pause(.2);
     i = i+1;
 end
+
+if (j)
+    tTemp =  get(handles.positions,'Data');
+    handles.types{handles.index} = tTemp(:,3);
+    handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) = ...
+        positions_CellEditCallback(handles.positions, ...
+                                   struct( ...
+                                       'Indices',[handles.whichFrame,3], ...
+                                       'EditData',num2str(handles.t),'NewData', ...
+                                       handles.t,'Error',[],...
+                                       'PreviousData',...
+                                       handles.types{handles.index}...
+                                       (handles.whichFrame-handles.startFrame+1)),... 
+                                   handles);
+    set(handles.positions,'Data',[handles.xPos,handles.yPos, ...
+                       handles.types{handles.index}]);
+    j = false;
+end
+
+guidata(hObject, handles);
 
 % Hint: get(hObject,'Value') returns toggle state of playButton
 
@@ -329,6 +374,7 @@ guidata(hObject, handles);
 
 ctypes = handles.types{handles.index}(eventdata.Indices(1));
 
+
 % --- Executes on button press in switchType.
 function switchType_Callback(hObject, eventdata, handles)
 % hObject    handle to switchType (see GCBO)
@@ -343,14 +389,14 @@ switch handles.t
     handles.t = -1;
 end
 
-guidata(hObject, handles);
-
 if ((get(handles.playButton,'Value')))
     set(handles.playButton,'Value',0);
     playButton_Callback(handles.playButton,[],handles)
     set(handles.playButton,'Value',1);
     playButton_Callback(handles.playButton,[],handles)
 end
+
+guidata(hObject, handles);
 
 
 % --- Executes on button press in saveTypes.
@@ -360,6 +406,7 @@ function saveTypes_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 savefile = 'memDonAclass.mat';
+handles.types
 save(savefile,'handles.types');
 
 
@@ -396,8 +443,23 @@ function playButton_ButtonDownFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
+% --- Executes during object creation, after setting all properties.
+function positions_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to positions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
 % --- Makes plots.
 function makePlot(handles)
+
+switch get(handles.c1,'Value')
+  case 1
+    handles.ch = 1;
+  case 0
+    handles.ch = 2;
+end
+
 imagesc(handles.images{handles.ch,handles.whichFrame});
 hold on;
 axis([0 225 0 225])
