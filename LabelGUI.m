@@ -99,7 +99,7 @@ for i = 1:handles.manyFrames
         handles.images{2,i}, [225 225]);
 end
 
-handles.types = cell(trackCount);
+handles.types = cell(1,trackCount);
 handles.types{handles.index} = zeros(length(handles.xPos),1)-1;
 
 % Loads the position of 
@@ -160,6 +160,10 @@ function frameSlider_Callback(hObject, eventdata, handles)
 
 % maps the frame slider position to an equivalent frame
 handles.whichFrame = floor(get(hObject,'Value')*(handles.manyFrames-1))+1;
+
+%positions_CellSelectionCallback(...
+%   handles.positions,struct('Indices', ...
+%                            [handles.whichFrame-handles.startFrame+1,3]));
 
 % fills in the information panel that displays the current frame
 % as well as when the selected cell track starts and stops
@@ -405,10 +409,28 @@ function saveTypes_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+%{
+c = clock;
+c = fix(c);
+n = sprintf('%iy%im%id%ih%im%is',c);
 savefile = 'memDonAclass.mat';
-handles.types
-save(savefile,'handles.types');
+savefile = strcat('./classMats/',n,savefile);
+%}
 
+userName = input('File name (type "date" for automatically generated file name): ','s');
+
+if (strcmp(userName,'date'))
+    c = clock;
+    c = fix(c);
+    userName = sprintf('%iy%im%id%ih%im%is',c);
+end
+
+savefile = '_memDonA.mat';
+savefile = strcat('./classMats/',userName,savefile);
+
+outMat = handles.types;
+%savefile
+save(savefile,'outMat');
 
 % --- Executes during object creation, after setting all properties.
 function frameInfo_CreateFcn(hObject, eventdata, handles)
@@ -467,17 +489,27 @@ axis square;
 if ((handles.whichFrame >= handles.startFrame) & ...
     (handles.whichFrame <= handles.endFrame))
     plot(handles.xPos,handles.yPos);
+    % green box around cell
     rectangle('Position',[handles.xPos(handles.whichFrame-handles.startFrame+1)-5, ...
                         handles.yPos(handles.whichFrame-handles.startFrame+1)-5,10,10], ... 
               'EdgeColor','g','LineStyle',':');
+    % To try to move positions selection to corresponding frame
+    %{
+    positions_CellSelectionCallback(...
+        handles.positions,struct('Indices', ...
+                                 [handles.whichFrame-handles.startFrame+1,3]),handles);
+    %}
 end
 set(gca,'XTick',[]);
 set(gca,'YTick',[]);
 hold off;
 
+
 % --- Makes the text that describes the current frame as well as
 % the start frame and end frame for the selected cell track.
 function frameInfoText(handles)
-toPrint = sprintf('Frame: %i\nStart: %i\nEnd: %i', ...
-                  handles.whichFrame,handles.startFrame,handles.endFrame);
+toPrint = sprintf('Frame: %i (%i)\nStart: %i (%i)\nEnd: %i (%i)', ...
+                  handles.whichFrame,handles.whichFrame-handles.startFrame+1, ...
+                  handles.startFrame,1, ...
+                  handles.endFrame,handles.endFrame-handles.startFrame+1);
 set(handles.frameInfo,'String',toPrint);
