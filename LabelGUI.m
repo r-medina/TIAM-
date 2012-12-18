@@ -475,6 +475,8 @@ function positions_CreateFcn(hObject, eventdata, handles)
 % --- Makes plots.
 function makePlot(handles)
 
+handles.whichFrame = floor(get(handles.frameSlider,'Value')*(handles.manyFrames-1))+1;
+
 switch get(handles.c1,'Value')
   case 1
     handles.ch = 1;
