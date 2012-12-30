@@ -1,37 +1,37 @@
 % This file was produced by matlab's GUI IDE "GUIDE." Most of the
 % functions in come from that.
-function varargout = LabelGUI(varargin)
-% LABELGUI MATLAB code for LabelGUI.fig
-%      LABELGUI, by itself, creates a new LABELGUI or raises the existing
+function varargout = trackGUI(varargin)
+% TRACKGUI MATLAB code for trackGUI.fig
+%      TRACKGUI, by itself, creates a new TRACKGUI or raises the existing
 %      singleton*.
 %
-%      H = LABELGUI returns the handle to a new LABELGUI or the handle to
+%      H = TRACKGUI returns the handle to a new TRACKGUI or the handle to
 %      the existing singleton*.
 %
-%      LABELGUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in LABELGUI.M with the given input arguments.
+%      TRACKGUI('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in TRACKGUI.M with the given input arguments.
 %
-%      LABELGUI('Property','Value',...) creates a new LABELGUI or raises the
+%      TRACKGUI('Property','Value',...) creates a new TRACKGUI or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before LabelGUI_OpeningFcn gets called.  An
+%      applied to the GUI before trackGUI_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to LabelGUI_OpeningFcn via varargin.
+%      stop.  All inputs are passed to trackGUI_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help LabelGUI
+% Edit the above text to modify the response to help trackGUI
 
-% Last Modified by GUIDE v2.5 29-Dec-2012 18:55:33
+% Last Modified by GUIDE v2.5 30-Dec-2012 06:44:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @LabelGUI_OpeningFcn, ...
-                   'gui_OutputFcn',  @LabelGUI_OutputFcn, ...
+                   'gui_OpeningFcn', @trackGUI_OpeningFcn, ...
+                   'gui_OutputFcn',  @trackGUI_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -46,13 +46,13 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before LabelGUI is made visible.
-function LabelGUI_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before trackGUI is made visible.
+function trackGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to LabelGUI (see VARARGIN)
+% varargin   command line arguments to trackGUI (see VARARGIN)
 
 % The following three variables store information that is crucial
 % to the displaying of the proper graph. whichFrame dictates which
@@ -63,10 +63,10 @@ handles.ch = 1;
 handles.indexHold = 0;
 
 % Loading in the data
-%tcMatFile = './data/benchMarkResults/exp1_control_results.mat';
-%tcMatFile = './data/benchMarkResults/exp3_well6_results.mat';
-tcMatFile = './data/benchMarkResults/exp4_fc12_results.mat';
-outputCell = load([tcMatFile]);
+%tiamFile = './data/benchMarkResults/exp1_control_results.mat';
+%tiamFile = './data/benchMarkResults/exp3_well6_results.mat';
+tiamFile = './data/benchMarkResults/exp4_fc12_results.mat';
+outputCell = load([tiamFile]);
 trackCount = length(outputCell.datacell);
 handles.outputCell = outputCell.datacell;
 % will be made into a string for the cell track list
@@ -88,13 +88,14 @@ ch1PicNames = dir(fullfile(pwd,'data','exp4','*.jpg'));
 ch2PicNames = dir(fullfile(pwd,'data','exp4','*.jpg'));
 
 handles.manyFrames = length(ch1PicNames);
+handles.frameSize = 680.15; % 225
 
 % Loads in pictures
 for i = 1:handles.manyFrames
     handles.images{1,i} = imread(fullfile(...
         'data','exp4',ch1PicNames(i).name));
     handles.images{1,i} = imresize(...
-        handles.images{1,i}, [680.15 680.15]); %[225 225]
+        handles.images{1,i}, [handles.frameSize handles.frameSize]); %[225 225]
     handles.images{2,i} = imread(fullfile(...
         'data','exp4',ch2PicNames(i).name));
     handles.images{2,i} = imresize(...
@@ -107,7 +108,7 @@ set(handles.cellTrack,'string',trackID);
 set(handles.holdTrack,'string',[0,trackID]);
 
 
-% Choose default command line output for LabelGUI
+% Choose default command line output for trackGUI
 handles.output = hObject;
 
 % Loads the text into the little 
@@ -133,12 +134,12 @@ channelPannel_SelectionChangeFcn(handles.channelPannel, ...
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes LabelGUI wait for user response (see UIRESUME)
+% UIWAIT makes trackGUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = LabelGUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = trackGUI_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -386,7 +387,7 @@ end
 imagesc(handles.images{handles.ch,handles.whichFrame});
 hold on;
 %hold all;
-axis([0 680.15 0 680.15]) % [0 225 0 225]
+axis([0 handles.frameSize/2 0 handles.frameSize/2])
 axis square;
 if ((handles.whichFrame >= handles.startFrame) & ...
     (handles.whichFrame <= handles.endFrame))
