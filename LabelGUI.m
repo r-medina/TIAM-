@@ -339,6 +339,7 @@ while get(hObject,'Value')
     i = i+1;
 end
 
+% FIX THE BUG HERE
 if (j)
     tTemp =  get(handles.positions,'Data');
     handles.types{handles.index} = tTemp(:,3);
@@ -409,14 +410,6 @@ function saveTypes_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%{
-c = clock;
-c = fix(c);
-n = sprintf('%iy%im%id%ih%im%is',c);
-savefile = 'memDonAclass.mat';
-savefile = strcat('./classMats/',n,savefile);
-%}
-
 userName = input('File name (type "date" for automatically generated file name): ','s');
 
 if (strcmp(userName,'date'))
@@ -429,7 +422,6 @@ savefile = '_memDonA.mat';
 savefile = strcat('./classMats/',userName,savefile);
 
 outMat = handles.types;
-%savefile
 save(savefile,'outMat');
 
 % --- Executes during object creation, after setting all properties.
@@ -495,12 +487,6 @@ if ((handles.whichFrame >= handles.startFrame) & ...
     rectangle('Position',[handles.xPos(handles.whichFrame-handles.startFrame+1)-5, ...
                         handles.yPos(handles.whichFrame-handles.startFrame+1)-5,10,10], ... 
               'EdgeColor','g','LineStyle',':');
-    % To try to move positions selection to corresponding frame
-    %{
-    positions_CellSelectionCallback(...
-        handles.positions,struct('Indices', ...
-                                 [handles.whichFrame-handles.startFrame+1,3]),handles);
-    %}
 end
 set(gca,'XTick',[]);
 set(gca,'YTick',[]);
