@@ -63,7 +63,7 @@ handles.ch = 1;
 handles.t = -1;
 
 % Loading in the data
-tcMatFile = './data/020512_hCD8/nveMemDonA_020512_v2_results.mat';
+tcMatFile = '../../data/020512_hCD8/nveMemDonA_020512_v2_results.mat';
 outputCell = load([tcMatFile]);
 trackCount = length(outputCell.datacell);
 handles.outputCell = outputCell.datacell;
@@ -419,7 +419,7 @@ if (strcmp(userName,'date'))
 end
 
 savefile = '_memDonA.mat';
-savefile = strcat('./classMats/',userName,savefile);
+savefile = strcat('../classMats/',userName,savefile);
 
 outMat = handles.types;
 save(savefile,'outMat');

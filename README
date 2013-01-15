@@ -1,4 +1,5 @@
-Tools that extend Willie Neiswanger's TIAM tool.
+Tools that extend Willie Neiswanger's TIAM tool:
+https://github.com/willieneis/TIAM/
 
 - classifyTracks/ contains code for classifier
 - joinTracks/ contains code for GUI to help join disjoint tracks
