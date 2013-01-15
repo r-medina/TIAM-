@@ -63,9 +63,9 @@ handles.ch = 1;
 handles.indexHold = 0;
 
 % Loading in the data
-%tiamFile = './data/benchMarkResults/exp1_control_results.mat';
-%tiamFile = './data/benchMarkResults/exp3_well6_results.mat';
-tiamFile = './data/benchMarkResults/exp4_fc12_results.mat';
+%tiamFile = '../../data/benchMarkResults/exp1_control_results.mat';
+%tiamFile = '../../data/benchMarkResults/exp3_well6_results.mat';
+tiamFile = '../../data/benchMarkResults/exp4_fc12_results.mat';
 outputCell = load([tiamFile]);
 trackCount = length(outputCell.datacell);
 handles.outputCell = outputCell.datacell;

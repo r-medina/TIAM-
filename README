@@ -1,4 +1,8 @@
-GUI for collecting supervised classifications of T-cells from TC-MAT
-start of SVM classifier
+Tools that extend Willie Neiswanger's TIAM tool.
+
+- classifyTracks/ contains code for classifier
+- joinTracks/ contains code for GUI to help join disjoint tracks
+- labelTracks/ contains code for GUI to help aggregate supervised data
+  classifier
 
 data/ directory needed to run everything.
