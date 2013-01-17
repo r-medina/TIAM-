@@ -5,8 +5,9 @@ function confinement
     %whichT = 8;
     %whichT = 74;
     %whichT = 63;
-    %whichT = 22;
-    whichT = 77;
+    %whichT = 24;
+    whichT = 35;
+    %whichT = 77;
     Sm = 10;
 
     tiamFile = '../data/020512_hCD8/nveMemDonA_020512_v2_results.mat';

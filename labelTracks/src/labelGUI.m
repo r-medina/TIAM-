@@ -267,8 +267,9 @@ function typeRecordPanel_SelectionChangeFcn(hObject, eventdata, handles)
 % eventdata  structure with the following fields (see UIBUTTONGROUP)
 %	EventName: string 'SelectionChanged' (read only)
 %	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
+%	NewValue: handle of the selected object
 % handles    structure with handles and user data (see GUIDATA)
+
 
 
 % --- Executes on button press in playButton.
@@ -314,6 +315,8 @@ while get(hObject,'Value')
                                            handles.types{handles.index}...
                                            (handles.whichFrame-handles.startFrame+1)),... 
                                        handles);
+        else
+            handles.t = -1;
     end
     % This next chunk deals with moving the slider and playing the
     % video correctly
@@ -352,6 +355,8 @@ if ((j) & (get(handles.recordY,'Value')))
     set(handles.positions,'Data',[handles.xPos,handles.yPos, ...
                        handles.types{handles.index}]);
     j = false;
+    else
+        handles.t = -1;
 end
 
 guidata(hObject, handles);
