@@ -216,16 +216,10 @@ set(handles.frameSlider,'Value',handles.sf);
 frameSlider_Callback(handles.frameSlider,[],handles);
 guidata(hObject, handles);
 
-%{
-if ~((get(handles.playButton,'Value')))
-    frameSlider_Callback(handles.frameSlider,[],handles);
-else
-%}
 if ((get(handles.playButton,'Value')))
     set(handles.playButton,'Value',0);
     playButton_Callback(handles.playButton,[],handles)
 end
-
 
 % Hints: contents = cellstr(get(hObject,'String')) returns cellTrack contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from cellTrack
@@ -340,8 +334,9 @@ while get(hObject,'Value')
     i = i+1;
 end
 
-% FIX THE BUG HERE
-if (j)
+% Stores the data that has been added to the global handles
+% structure instead of just localized to this function
+if ((j) & (get(handles.recordY,'Value')))
     tTemp =  get(handles.positions,'Data');
     handles.types{handles.index} = tTemp(:,3);
     handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) = ...
