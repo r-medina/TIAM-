@@ -80,23 +80,24 @@ handles.endFrame = handles.outputCell{handles.index}(1,2);
 
 % The names of the pictures for the two channels that will be
 % loaded into the GUI
-ch1PicNames = dir(fullfile(pwd,'data','020512_hCD8','nveMemDonA','*_c001.jpg'));
-ch2PicNames = dir(fullfile(pwd,'data','020512_hCD8','nveMemDonA','*_c004.jpg'));
+ch1PicNames = dir(fullfile(pwd,'..','..','data','020512_hCD8','nveMemDonA','*_c001.jpg'));
+ch2PicNames = dir(fullfile(pwd,'..','..','data','020512_hCD8','nveMemDonA','*_c004.jpg'));
 
 handles.manyFrames = length(ch1PicNames);
+handles.frameSize = 225;
 
 handles.sf = handles.startFrame/handles.manyFrames;
 
 % Loads in pictures
 for i = 1:handles.manyFrames
     handles.images{1,i} = imread(fullfile(...
-        'data','020512_hCD8','nveMemDonA',ch1PicNames(i).name));
+        '..','..','data','020512_hCD8','nveMemDonA',ch1PicNames(i).name));
     handles.images{1,i} = imresize(...
-        handles.images{1,i}, [225 225]);
+        handles.images{1,i}, [handles.frameSize handles.frameSize]);
     handles.images{2,i} = imread(fullfile(...
-        'data','020512_hCD8','nveMemDonA',ch2PicNames(i).name));
+        '..','..','data','020512_hCD8','nveMemDonA',ch2PicNames(i).name));
     handles.images{2,i} = imresize(...
-        handles.images{2,i}, [225 225]);
+        handles.images{2,i}, [handles.frameSize handles.frameSize]);
 end
 
 handles.types = cell(1,trackCount);
@@ -478,7 +479,7 @@ end
 
 imagesc(handles.images{handles.ch,handles.whichFrame});
 hold on;
-axis([0 225 0 225])
+axis([0 handles.frameSize 0 handles.frameSize])
 axis square;
 if ((handles.whichFrame >= handles.startFrame) & ...
     (handles.whichFrame <= handles.endFrame))

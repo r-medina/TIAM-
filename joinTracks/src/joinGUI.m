@@ -1,37 +1,37 @@
 % This file was produced by matlab's GUI IDE "GUIDE." Most of the
 % functions in come from that.
-function varargout = trackGUI(varargin)
-% TRACKGUI MATLAB code for trackGUI.fig
-%      TRACKGUI, by itself, creates a new TRACKGUI or raises the existing
+function varargout = joinGUI(varargin)
+% JOINGUI MATLAB code for joinGUI.fig
+%      JOINGUI, by itself, creates a new JOINGUI or raises the existing
 %      singleton*.
 %
-%      H = TRACKGUI returns the handle to a new TRACKGUI or the handle to
+%      H = JOINGUI returns the handle to a new JOINGUI or the handle to
 %      the existing singleton*.
 %
-%      TRACKGUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in TRACKGUI.M with the given input arguments.
+%      JOINGUI('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in JOINGUI.M with the given input arguments.
 %
-%      TRACKGUI('Property','Value',...) creates a new TRACKGUI or raises the
+%      JOINGUI('Property','Value',...) creates a new JOINGUI or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before trackGUI_OpeningFcn gets called.  An
+%      applied to the GUI before joinGUI_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to trackGUI_OpeningFcn via varargin.
+%      stop.  All inputs are passed to joinGUI_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help trackGUI
+% Edit the above text to modify the response to help joinGUI
 
-% Last Modified by GUIDE v2.5 30-Dec-2012 06:44:47
+% Last Modified by GUIDE v2.5 17-Jan-2013 02:27:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @trackGUI_OpeningFcn, ...
-                   'gui_OutputFcn',  @trackGUI_OutputFcn, ...
+                   'gui_OpeningFcn', @joinGUI_OpeningFcn, ...
+                   'gui_OutputFcn',  @joinGUI_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -46,13 +46,13 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before trackGUI is made visible.
-function trackGUI_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before joinGUI is made visible.
+function joinGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to trackGUI (see VARARGIN)
+% varargin   command line arguments to joinGUI (see VARARGIN)
 
 % The following three variables store information that is crucial
 % to the displaying of the proper graph. whichFrame dictates which
@@ -108,7 +108,7 @@ set(handles.cellTrack,'string',trackID);
 set(handles.holdTrack,'string',[0,trackID]);
 
 
-% Choose default command line output for trackGUI
+% Choose default command line output for joinGUI
 handles.output = hObject;
 
 % Loads the text into the little 
@@ -134,12 +134,12 @@ channelPannel_SelectionChangeFcn(handles.channelPannel, ...
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes trackGUI wait for user response (see UIRESUME)
+% UIWAIT makes joinGUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = trackGUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = joinGUI_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
