@@ -63,8 +63,8 @@ handles.ch = 1;
 handles.t = -1;
 
 % Loading in the data
-tcMatFile = '../../data/020512_hCD8/nveMemDonA_020512_v2_results.mat';
-outputCell = load([tcMatFile]);
+tiamFile = '../../data/020512_hCD8/nveMemDonA_020512_v2_results.mat';
+outputCell = load([tiamFile]);
 trackCount = length(outputCell.datacell);
 handles.outputCell = outputCell.datacell;
 % will be made into a string for the cell track list

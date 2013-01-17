@@ -6,32 +6,26 @@
 % the datacell and csv
 function features = trajectoryFeatures(outMat,outCSV,manyTypes)
 
-%outputCell = load([outMat]);
-%outputCSV = csvread(outCSV);
-
-outputCell = outMat;
-outputCSV = outCSV;
-
 %{
-class(outputCell)
-class(outputCell{1})
-size(outputCell{1})
+class(outMat)
+class(outMat{1})
+size(outMat{1})
 features = 0;
 return;
 %}
 
-trackCount1 = length(outputCell);%(outputCell.datacell);
-trackCount2 = length(outputCSV);%(outputCSV);
+trackCount1 = length(outMat);%(outMat.datacell);
+trackCount2 = length(outCSV);%(outCSV);
 
 if (trackCount1 ~= trackCount2)
-    %outputCell = outputCell.datacell(1,1:trackCount2);
-    outputCell = outputCell(1,1:trackCount2);
+    %outMat = outMat.datacell(1,1:trackCount2);
+    outMat = outMat(1,1:trackCount2);
     trackCount = trackCount2;
 end
 
 % Track type has to be either 0 and 1 or 1 and 2
-if (any(outputCSV(:,2) == 2) & (manyTypes == 2))
-    outputCSV(:,2) = outputCSV(:,2) - 1;
+if (any(outCSV(:,2) == 2) & (manyTypes == 2))
+    outCSV(:,2) = outCSV(:,2) - 1;
 end
 
 numFeatures = 10;
@@ -45,16 +39,16 @@ featCell = cell(trackCount,numFeatures);
 
 for i = 1:trackCount
     % Track length is length of the number of positions for cell
-    t_len = length(outputCell{i}(:,3));
+    t_len = length(outMat{i}(:,3));
     % x coordinates are the third column
-    x_p  = outputCell{i}(:,3);
+    x_p  = outMat{i}(:,3);
     % y coordinates are the fourth column
-    y_p  = outputCell{i}(:,4);
+    y_p  = outMat{i}(:,4);
     % x and y vectors
     x_s = getSteps(x_p,t_len);
     y_s = getSteps(y_p,t_len);
     % index
-    featCell{i,1} = outputCSV(i,1);
+    featCell{i,1} = outCSV(i,1);
     % net displacement
     featCell{i,2} = getNetDisp(x_p,y_p,t_len);
     % straightness
@@ -80,7 +74,7 @@ for i = 1:trackCount
     % msd
     featCell{i,9} = getMSD(x_p,y_p,t_len);
     % type
-    featCell{i,10} = outputCSV(i,2);
+    featCell{i,10} = outCSV(i,2);
 end
 
 outMat = cell2mat(featCell);

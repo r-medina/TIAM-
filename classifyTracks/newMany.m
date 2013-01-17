@@ -2,13 +2,13 @@ function newMany(whichExp)
 
 switch whichExp
   case 0
-    outputCell = load(['~/other/TC-MAT/data/020512_hCD8/' ...
+    outputCell = load(['../data/020512_hCD8/' ...
                        'nveMemDonA_020512_v2_results.mat']);
-    outputCSV = csvread('~/other/TC-MAT/data/020512_hCD8/cellDataMemDonA.csv');
+    outputCSV = csvread('../data/020512_hCD8/cellDataMemDonA.csv');
   case 1
-    outputCell = load(['~/other/TC-MAT/data/020512_hCD8/' ...
+    outputCell = load(['../data/020512_hCD8/' ...
                        'nveDonA_020512_v2_results.mat']);
-    outputCSV = csvread('~/other/TC-MAT/data/020512_hCD8/cellDataDonA.csv');
+    outputCSV = csvread('../TC-MAT/data/020512_hCD8/cellDataDonA.csv');
 end
 
 cellCount = length(outputCell.datacell);
