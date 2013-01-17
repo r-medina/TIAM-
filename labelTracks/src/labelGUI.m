@@ -214,7 +214,6 @@ end
 set(handles.positions,'Data',[handles.xPos,handles.yPos,handles.types{handles.index}]);
 set(handles.frameSlider,'Value',handles.sf);
 frameSlider_Callback(handles.frameSlider,[],handles);
-handles.t = -1;
 guidata(hObject, handles);
 
 if ((get(handles.playButton,'Value')))
@@ -282,9 +281,6 @@ function playButton_Callback(hObject, eventdata, handles)
 handles.whichFrame = floor(get(handles.frameSlider,'Value')*(handles.manyFrames-1))+1;
 trackLen = handles.endFrame-handles.startFrame+1;
 startPlay = get(handles.frameSlider,'Value');
-%startPlay = handles.whichFrame/handles.manyFrames;
-%set(handles.frameSlider,'Value',startPlay);
-%frameSlider_Callback(handles.frameSlider,[],handles);
 
 if ((handles.whichFrame >= handles.endFrame) | ...
     (startPlay < handles.sf))
@@ -292,7 +288,6 @@ if ((handles.whichFrame >= handles.endFrame) | ...
     set(handles.frameSlider,'Value',startPlay);
     frameSlider_Callback(handles.frameSlider,[],handles);
     handles.whichFrame = floor(get(handles.frameSlider,'Value')*(handles.manyFrames-1))+1;
-    %handles.whichFrame = startPlay;
 end
 
 j = false;
@@ -301,10 +296,17 @@ while get(hObject,'Value')
     j = true;
     % Edits cell type
     if (get(handles.recordY,'Value'))
-        if ((i == 0) & ...
-            (handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) ...
-             ~= -1))
-            handles.t = handles.types{handles.index}(handles.whichFrame-handles.startFrame+1);
+        if (i == 0)
+            if (handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) ...
+                 ~= -1)
+                handles.t = ...
+                    handles.types{handles.index}(handles.whichFrame-handles.startFrame+1);
+            elseif ((handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) ...
+                 == -1) & (eventdata == true))
+                continue;
+            else
+                handles.t = -1;
+            end
         end
         handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) = ...
             positions_CellEditCallback(handles.positions, ...
@@ -316,8 +318,6 @@ while get(hObject,'Value')
                                            handles.types{handles.index}...
                                            (handles.whichFrame-handles.startFrame+1)),... 
                                        handles);
-        else
-            handles.t = -1;
     end
     % This next chunk deals with moving the slider and playing the
     % video correctly
@@ -356,8 +356,6 @@ if ((j) & (get(handles.recordY,'Value')))
     set(handles.positions,'Data',[handles.xPos,handles.yPos, ...
                        handles.types{handles.index}]);
     j = false;
-    else
-        handles.t = -1;
 end
 
 guidata(hObject, handles);
@@ -379,7 +377,11 @@ function ctypes = positions_CellEditCallback(hObject, eventdata, handles)
 handles.types{handles.index}(eventdata.Indices(1)) = eventdata.NewData;
 guidata(hObject, handles);
 
-ctypes = handles.types{handles.index}(eventdata.Indices(1));
+handles.t = handles.types{handles.index}(eventdata.Indices(1));
+
+ctypes = handles.t;
+
+%ctypes = handles.types{handles.index}(eventdata.Indices(1));
 
 
 % --- Executes on button press in switchType.
@@ -400,7 +402,7 @@ if ((get(handles.playButton,'Value')))
     set(handles.playButton,'Value',0);
     playButton_Callback(handles.playButton,[],handles)
     set(handles.playButton,'Value',1);
-    playButton_Callback(handles.playButton,[],handles)
+    playButton_Callback(handles.playButton,[true],handles)
 end
 
 guidata(hObject, handles);
