@@ -214,6 +214,7 @@ end
 set(handles.positions,'Data',[handles.xPos,handles.yPos,handles.types{handles.index}]);
 set(handles.frameSlider,'Value',handles.sf);
 frameSlider_Callback(handles.frameSlider,[],handles);
+handles.t = -1;
 guidata(hObject, handles);
 
 if ((get(handles.playButton,'Value')))
