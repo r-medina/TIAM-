@@ -1,7 +1,7 @@
 % This file was produced by matlab's GUI IDE "GUIDE." Most of the
 % functions in come from that.
-function varargout = LabelGUI(varargin)
-% LABELGUI MATLAB code for LabelGUI.fig
+function varargout = labelGUI(varargin)
+% LABELGUI MATLAB code for labelGUI.fig
 %      LABELGUI, by itself, creates a new LABELGUI or raises the existing
 %      singleton*.
 %
@@ -13,25 +13,25 @@ function varargout = LabelGUI(varargin)
 %
 %      LABELGUI('Property','Value',...) creates a new LABELGUI or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before LabelGUI_OpeningFcn gets called.  An
+%      applied to the GUI before labelGUI_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to LabelGUI_OpeningFcn via varargin.
+%      stop.  All inputs are passed to labelGUI_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help LabelGUI
+% Edit the above text to modify the response to help labelGUI
 
-% Last Modified by GUIDE v2.5 12-Dec-2012 23:06:08
+% Last Modified by GUIDE v2.5 17-Jan-2013 02:42:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @LabelGUI_OpeningFcn, ...
-                   'gui_OutputFcn',  @LabelGUI_OutputFcn, ...
+                   'gui_OpeningFcn', @labelGUI_OpeningFcn, ...
+                   'gui_OutputFcn',  @labelGUI_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -46,13 +46,13 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before LabelGUI is made visible.
-function LabelGUI_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before labelGUI is made visible.
+function labelGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to LabelGUI (see VARARGIN)
+% varargin   command line arguments to labelGUI (see VARARGIN)
 
 % The following three variables store information that is crucial
 % to the displaying of the proper graph. whichFrame dictates which
@@ -110,7 +110,7 @@ set(handles.positions,'Data',[handles.xPos,handles.yPos,handles.types{handles.in
 % that the user clicks to select 
 set(handles.cellTrack,'string',trackID);
 
-% Choose default command line output for LabelGUI
+% Choose default command line output for labelGUI
 handles.output = hObject;
 
 % Loads the text into the little 
@@ -138,12 +138,12 @@ typeRecordPanel_SelectionChangeFcn(handles.typeRecordPanel, ...
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes LabelGUI wait for user response (see UIRESUME)
+% UIWAIT makes labelGUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = LabelGUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = labelGUI_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
