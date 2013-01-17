@@ -303,7 +303,6 @@ while get(hObject,'Value')
                     handles.types{handles.index}(handles.whichFrame-handles.startFrame+1);
             elseif ((handles.types{handles.index}(handles.whichFrame-handles.startFrame+1) ...
                  == -1) & (eventdata == true))
-                continue;
             else
                 handles.t = -1;
             end
