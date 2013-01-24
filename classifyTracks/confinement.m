@@ -5,8 +5,8 @@ function confinement
     %whichT = 8;
     %whichT = 74;
     %whichT = 63;
-    %whichT = 24;
-    whichT = 35;
+    whichT = 24;
+    %whichT = 35;
     %whichT = 77;
     Sm = 10;
 
