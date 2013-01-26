@@ -24,7 +24,7 @@ function varargout = labelGUI(varargin)
 
 % Edit the above text to modify the response to help labelGUI
 
-% Last Modified by GUIDE v2.5 17-Jan-2013 02:42:47
+% Last Modified by GUIDE v2.5 24-Jan-2013 10:48:46
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -426,6 +426,23 @@ savefile = strcat('../classMats/',userName,savefile);
 
 outMat = handles.types;
 save(savefile,'outMat');
+
+% --- Executes on button press in resetButton.
+function resetButton_Callback(hObject, eventdata, handles)
+% hObject    handle to resetButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if ((get(handles.playButton,'Value')))
+    set(handles.playButton,'Value',0);
+    playButton_Callback(handles.playButton,[],handles)
+end
+
+handles.types{handles.index} = zeros(length(handles.xPos),1)-1;
+set(handles.positions,'Data',[handles.xPos,handles.yPos,handles.types{handles.index}]);
+
+guidata(hObject, handles);
+
 
 % --- Executes during object creation, after setting all properties.
 function frameInfo_CreateFcn(hObject, eventdata, handles)

@@ -70,7 +70,7 @@ for i = 1:trackCount
     % skewness
     featCell{i,7} = getSkew(pos_proj,pos_proj_mean,t_len);
     % kurtosis
-    featCell{i,8} = getSkew(pos_proj,pos_proj_mean,t_len);;
+    featCell{i,8} = getKurt(pos_proj,pos_proj_mean,t_len);;
     % msd
     featCell{i,9} = getMSD(x_p,y_p,t_len);
     % type
