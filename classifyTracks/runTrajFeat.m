@@ -39,7 +39,7 @@ function runTrajFeat()
         featureCell{i} = [featureCell{i},labelCell{i}(1:featLen)];
         
         % stops loop prematurely for run time
-        if i == 30
+        if i == 50
             break;
         end
     end
@@ -64,21 +64,18 @@ function runTrajFeat()
 
     options = statset('maxiter',40000,'display','iter');
 
-
     SVMStruct = svmtrain(featureMat(:,1:6),...
                          featureMat(:,7),...
                          'method','SM','options',options);
     Group = svmclassify(SVMStruct,featureMat(:,1:6));
-    test(in_or_out(Group),in_or_out(featureMat(:,7)))
-    
+    [conf, sensitivity, specificity] = test(Group,featureMat(:,7))
+
     %{
     SVMStruct = svmtrain(featureMat(1:2:manyPoints,1:6),...
                          featureMat(1:2:manyPoints,7),...
                          'method','SM','options',options);
     Group = svmclassify(SVMStruct,featureMat(2:2:manyPoints,1:6));
-    test(in_or_out(Group),in_or_out(featureMat(2:2:manyPoints,7)))
-    %}
-    
+    test(Group,featureMat(2:2:manyPoints,7))
 
     % following block is for data representation in graphs
     for i = 1:length(featureMat)
@@ -103,35 +100,56 @@ function runTrajFeat()
         ylabel(featNames(space(2)));
         zlabel(featNames(space(3)));
     end
+    %}
 
+    for i = 1:length(featureMat)
+        if featureMat(i,7) == 1
+            whenchange = i;
+            break;
+        end
+    end
     
+    %{
+    [pc, coords, energies] = princomp(featureMat(:,1:6));
+    figure;
+    hold all;
+    coords = coords';
+    plot3(coords(1,1:whenchange-1),coords(2,1:whenchange-1),coords(3,1:whenchange-1),'.');
+    plot3(coords(1,whenchange:manyPoints),...
+          coords(2,whenchange:manyPoints),...
+          coords(3,whenchange:manyPoints),'.');
+    figure;
+    plot(energies)
+    %}
+
 end
 
 % Makes confusion matrix:
 % [true positives, false positives; false negatives, true negatives].
-function conf_matrix = test(inout_predic,y)
+%function conf_matrix = test(inout_predic,y)
+function [conf_matrix, sens, spec] = test(group,y)
   conf_matrix = zeros(2);
 
-  ins = y==1;
-  outs = y==-1;
-  ins_predic = inout_predic==1;
-  outs_predic = inout_predic==-1;
+  tp = 0; fn = 0; fp = 0; tn = 0;
 
-  true_ins = sum(ins);
-  true_outs = sum(outs);
-  predic_ins = sum(ins_predic);
-  predic_outs = sum(outs_predic);
-  true_pos = sum((ins==1)&(ins_predic==1));
-  false_pos = sum((ins==0)&(ins_predic==1));
-  true_neg = sum((outs==1)&(outs_predic==1));
-  false_neg = sum((outs==0)&(outs_predic==1));
+  for i = 1:length(y)
+      if y(i) == 1
+          if group(i) == 1;
+              tp = tp + 1;
+          else
+              fn = fn + 1;
+          end
+      else
+          if group(i) == 1;
+              fp = fp + 1;
+          else
+              tn = tn + 1;
+          end
+      end
+  end
 
-  conf_matrix(1,:) = [true_pos,false_pos];
-  conf_matrix(2,:) = [false_neg,true_neg];
-end
+  conf_matrix = [tp fn; fp tn];
+  sens = tp/(tp+fn);
+  spec = tn/(tn+fp);
 
-% Says whether a probability is in or out.
-function in_out = in_or_out(prob)
-  in_out = prob > .5;
-  in_out = (in_out == 0)*-1 + in_out;
 end
