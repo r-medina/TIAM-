@@ -20,6 +20,12 @@ function [features,featureNames] = trajectoryFeatures(positions)
     % store steps (directional vectors) and angles between steps
     steps = getSteps(positions,trackLength);
     angles = getAngle(positions,trackLength);
+    % calculate MSD
+    msd = getMSD(positions,trackLength);
+    % calculate diffusion coefficient as slope of first few points
+    % of MSD
+    diffCoeff = polyfit([1:10],msd(1:10),1);
+    diffCoeff = diffCoeff(1);
     
     % feats is the matrix that will store all the features for each
     % data point in the cell track
@@ -55,8 +61,7 @@ function [features,featureNames] = trajectoryFeatures(positions)
 
             feats(i:i+j,6) = feats(i:i+j,6) + getSkew(pos_proj,pos_proj_mean,j);
             feats(i:i+j,7) = feats(i:i+j,7) + getKurt(pos_proj,pos_proj_mean,j);
-            %feats(i:i+j,8) = feats(i:i+j,8) + getMSD(positions(i:i+j,:),j);
-            %feats(i:i+j,9) = feats(i:i+j,9) + getConf(positions(i:i+j,:));
+            %feats(i:i+j,8) = feats(i:i+j,8) + getConf(positions(i:i+j,:),j,diffCoeff);
             manyTimes(i:i+j) = manyTimes(i:i+j) + 1;
         end
     end
@@ -104,7 +109,7 @@ end
 
 % Helmuth et al.
 function efficiency = getEff(windowPositions,windowSteps,windowLength)
-    global epsilon
+    global epsilon;
     s2 = 0;
     dispVec = windowSteps(windowLength,:)-windowSteps(1,:);
     disp = dot(dispVec,dispVec);
@@ -117,14 +122,14 @@ end
 
 % Helmuth et al.
 function asymmetry = getAsymm(eig1,eig2)
-    global epsilon
+    global epsilon;
     asymmetry = -log(1-((eig1-eig2).^2/(2*(eig1+eig2).^2+epsilon)));
     %asymmetry = badFilter(asymmetry);
 end
 
 % Helmuth et al.
 function skewness = getSkew(projection,projMean,trackLength)
-    global epsilon
+    global epsilon;
     num = 0;
     denom = 0;
     for i = 1:trackLength
@@ -138,7 +143,7 @@ end
 
 % Helmuth et al.
 function kurtosis =  getKurt(projection,projMean,windowLength)
-    global epsilon
+    global epsilon;
     num = 0;
     denom = 0;
     for i = 1:windowLength
@@ -150,15 +155,38 @@ function kurtosis =  getKurt(projection,projMean,windowLength)
     %kurtosis = badFilter(kurtosis);
 end
 
-function msd = getMSD(windowPositions,windowLength)
+function confinement = getConf(windowPositions,windowLength,diffusionCoefficient)
+    global epsilon;
     xPos = windowPositions(:,1);
     yPos = windowPositions(:,2);
-    maxdt = floor(windowLength/4);
-    maxdt
+
+    R = 0;
+    for i = 2:windowLength
+        d = (xPos(i)-xPos(1)).^2 + (yPos(i)-yPos(1)).^2;
+        if (d > R)
+            R = d;
+        end
+    end
+
+    logPsi = 0.2048-2.5117*diffusionCoefficient*windowLength/(R+epsilon);
+    L = -logPsi - 1;
+
+    %    if (exp(lPsi) <= .1)
+    %    L = -lPsi - 1;
+    %elseif (exp(lPsi) > .1)
+    %    L = 0;
+    %end
+    confinement = L;
+end
+
+function [msd] = getMSD(positions,trackLength)
+    trackLength = trackLength - 1;
+    maxdt = floor(trackLength/4);    
     msd = zeros(1,maxdt);
-    for j = 1:windowLength-maxdt
+    xPos = positions(:,1);
+    yPos = positions(:,2);
+    for j = 1:maxdt
         for i = 1:maxdt
-            dx = xPos(i+j) - xPos(i);
             dx = xPos(i+j) - xPos(i);
             dy = yPos(i+j) - yPos(i);
             disp = norm([dx,dy]).^2;
@@ -166,6 +194,7 @@ function msd = getMSD(windowPositions,windowLength)
         end
         msd(j) = msd(j)/maxdt;
     end
+    
 end
 
 
