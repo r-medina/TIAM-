@@ -1,13 +1,15 @@
 function [features,featureNames] = trajectoryFeatures(positions)
 
+    global epsilon;
+    epsilon = 0.00001;
 
-    manyFeatures = 9;
+    manyFeatures = 8;
     % features: something, straightness, bending, efficiency,
     % asymmetry, point position skewness, point position kurtosis,
     % means square displacement, confinement
     % probability
     featureNames = {'','straigtness','bending','efficiency', ...
-                    'asymmetry','skewness','kurtosis','msd', ...
+                    'asymmetry','skewness','kurtosis', ...
                     'confinement'};
 
     % arbitrary minimum and maximum trajectory window length
@@ -24,9 +26,14 @@ function [features,featureNames] = trajectoryFeatures(positions)
     msd = getMSD(positions,trackLength);
     % calculate diffusion coefficient as slope of first few points
     % of MSD
-    diffCoeff = polyfit([1:10],msd(1:10),1);
+    try
+        diffCoeff = polyfit([1:4],msd(1:4),1);
+    catch err
+        diffCoeff = polyfit([1:2],msd(1:2),1);
+    end
+
     diffCoeff = diffCoeff(1);
-    
+        
     % feats is the matrix that will store all the features for each
     % data point in the cell track
     feats = zeros(trackLength,manyFeatures);
@@ -61,23 +68,19 @@ function [features,featureNames] = trajectoryFeatures(positions)
 
             feats(i:i+j,6) = feats(i:i+j,6) + getSkew(pos_proj,pos_proj_mean,j);
             feats(i:i+j,7) = feats(i:i+j,7) + getKurt(pos_proj,pos_proj_mean,j);
-            %feats(i:i+j,8) = feats(i:i+j,8) + getConf(positions(i:i+j,:),j,diffCoeff);
+            feats(i:i+j,8) = feats(i:i+j,8) + getConf(positions(i:i+j,:),j,diffCoeff);
             manyTimes(i:i+j) = manyTimes(i:i+j) + 1;
         end
     end
     
-    % If there's a bug, I think it's here. I'm trying to divide
-    % each column of the feats matrix by how many times each of the
-    % rows in that column was summed over such that those data
-    % points become averages
+    % divide each column of the feats matrix by how many times each of the
+    % rows in that column was summed over such that those data points
+    % become averages
     for i = 1:(manyFeatures)
         feats(:,i) = feats(:,i) ./ manyTimes;
     end
 
     features = feats;
-
-    global epsilon
-    epsilon = 0.00001;
 
 end
 
@@ -169,11 +172,12 @@ function confinement = getConf(windowPositions,windowLength,diffusionCoefficient
     end
 
     logPsi = 0.2048-2.5117*diffusionCoefficient*windowLength/(R+epsilon);
-    L = -logPsi - 1;
+    %L = -logPsi - 1;
+    L = logPsi;
 
-    %    if (exp(lPsi) <= .1)
-    %    L = -lPsi - 1;
-    %elseif (exp(lPsi) > .1)
+    %if (exp(logPsi) <= .1)
+    %    L = -logPsi - 1;
+    %elseif (exp(logPsi) > .1)
     %    L = 0;
     %end
     confinement = L;
