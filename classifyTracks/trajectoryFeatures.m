@@ -21,7 +21,7 @@ function [features,featureNames] = trajectoryFeatures(positions)
     
     % store steps (directional vectors) and angles between steps
     steps = getSteps(positions,trackLength);
-    angles = getAngle(positions,trackLength);
+    angles = getAngle(steps,trackLength);
     % calculate MSD
     msd = getMSD(positions,trackLength);
     % calculate diffusion coefficient as slope of first few points
@@ -119,7 +119,9 @@ function efficiency = getEff(windowPositions,windowSteps,windowLength)
     for i = 1:windowLength-1
         s2 = s2 + dot(windowSteps(i,:),windowSteps(i,:));
     end
-    efficiency = disp.^2/(windowLength*s2+epsilon);
+    %efficiency = disp.^2/(windowLength*s2+epsilon);
+    efficiency = disp/(windowLength*s2+epsilon);
+    %efficiency = badFilter(efficiency);
 end
 
 % Helmuth et al.
