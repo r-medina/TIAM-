@@ -4,7 +4,7 @@ import pylab as pl
 import pandas as pd
 from glob import glob
 
-import features as feats
+import FeatureSpace as fs
 
 def get_dataframe():
     data_dict = {}
@@ -16,7 +16,7 @@ def get_dataframe():
         data_dict[i] = raw
         i += 1
     howMany = i
-    howMany = 20
+    howMany = 38#38
 
     data_panel = pd.Panel(data_dict)
 
@@ -36,28 +36,22 @@ def get_dataframe():
         pos = pl.array([data_panel[i].dropna(axis=0)['x'], \
                         data_panel[i].dropna(axis=0)['y']])
         pos = pl.transpose(pos)
-        features_dict[i] = feats.get_features(pos)
+        features_dict[i] = fs.FeatureSpace.get_features(pos)
 
     #features_panel = pd.Panel(features_dict)
     features_panel = features_dict
         
-    #return features_panel
-
-    feat_array = pl.vstack([features_panel[0][:,0:3],features_panel[1][:,0:3]])
+    feat_array = pl.vstack([features_panel[0][:,0:4],features_panel[1][:,0:4]])
     label_array = pl.hstack([labels_panel[0].dropna(axis=0)['labels'],\
                              labels_panel[1].dropna(axis=0)['labels']])
 
     for i in range(2,howMany):
-        feat_array = pl.vstack([feat_array,features_panel[i][:,0:3]])
+        feat_array = pl.vstack([feat_array,features_panel[i][:,0:4]])
         label_array = pl.hstack([label_array,\
                                  labels_panel[i].dropna(axis=0)['labels']])
     label_array = pl.transpose(label_array)
-    #something = pl.append(feat_array,label_array,axis=0)
 
-    #counts0, bin0 = pl.histogram(feat_array[label_array==0,0])
-    #return label_array, feat_array
-
-    for i in range(3):
+    for i in range(4):
         a = label_array
         b = feat_array
         pl.figure(i)
@@ -65,6 +59,9 @@ def get_dataframe():
         if (i==2):
             counts0, bins0 = pl.histogram(b[a==0,i],100,range=(0.,0.08))
             counts1, bins1 = pl.histogram(b[a==1,i],100,range=(0.,0.08))
+            #elif (i==3):
+            #counts0, bins0 = pl.histogram(b[a==0,i],100,range=(.692,.697))
+            #counts1, bins1 = pl.histogram(b[a==1,i],100,range=(0.692,0.697))
         else:
             counts0, bins0 = pl.histogram(b[a==0,i],100)
             counts1, bins1 = pl.histogram(b[a==1,i],100)
