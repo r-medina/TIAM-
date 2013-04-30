@@ -40,18 +40,20 @@ def get_dataframe():
 
     #features_panel = pd.Panel(features_dict)
     features_panel = features_dict
+    feats_done = 6
         
-    feat_array = pl.vstack([features_panel[0][:,0:4],features_panel[1][:,0:4]])
+    feat_array = pl.vstack([features_panel[0][:,0:feats_done], \
+                            features_panel[1][:,0:feats_done]])
     label_array = pl.hstack([labels_panel[0].dropna(axis=0)['labels'],\
                              labels_panel[1].dropna(axis=0)['labels']])
 
     for i in range(2,howMany):
-        feat_array = pl.vstack([feat_array,features_panel[i][:,0:4]])
+        feat_array = pl.vstack([feat_array,features_panel[i][:,0:feats_done]])
         label_array = pl.hstack([label_array,\
                                  labels_panel[i].dropna(axis=0)['labels']])
     label_array = pl.transpose(label_array)
 
-    for i in range(4):
+    for i in range(feats_done):
         a = label_array
         b = feat_array
         pl.figure(i)
@@ -59,9 +61,9 @@ def get_dataframe():
         if (i==2):
             counts0, bins0 = pl.histogram(b[a==0,i],100,range=(0.,0.08))
             counts1, bins1 = pl.histogram(b[a==1,i],100,range=(0.,0.08))
-            #elif (i==3):
-            #counts0, bins0 = pl.histogram(b[a==0,i],100,range=(.692,.697))
-            #counts1, bins1 = pl.histogram(b[a==1,i],100,range=(0.692,0.697))
+        elif (i==5):
+            counts0, bins0 = pl.histogram(b[a==0,i],100,range=(1,5))
+            counts1, bins1 = pl.histogram(b[a==1,i],100,range=(1,5))
         else:
             counts0, bins0 = pl.histogram(b[a==0,i],100)
             counts1, bins1 = pl.histogram(b[a==1,i],100)
