@@ -4,30 +4,30 @@ epsilon = 0.00001;
 
 # Features
 
-def get_straight(windowAngles,windowLength):
+def get_straight(window_angles,window_length):
     cosb = 0
-    for i in range(windowLength-2):
-        cosb += pl.cos(windowAngles[i])
+    for i in range(window_length-2):
+        cosb += pl.cos(window_angles[i])
     
-    straightness = (1./(windowLength-1))*cosb
+    straightness = (1./(window_length-1))*cosb
     return straightness
 
-def get_bend(windowAngles,windowLength):
+def get_bend(window_angles,window_length):
     sinb = 0
-    for i in range(windowLength-2):
-        sinb += pl.sin(windowAngles[i])
+    for i in range(window_length-2):
+        sinb += pl.sin(window_angles[i])
     
-    bending = (1./(windowLength-1))*sinb
+    bending = (1./(window_length-1))*sinb
     return bending
 
-def get_eff(windowPositions,windowSteps,windowLength):
+def get_eff(window_positions,window_steps,window_length):
     s2 = 0
-    dispVec = windowSteps[windowLength-1,:] - windowSteps[0,:]
+    dispVec = window_steps[window_length-1,:] - window_steps[0,:]
     disp = pl.dot(dispVec,dispVec)
-    for i in range(windowLength-1):
-        s2 += pl.dot(windowSteps[i,:],windowSteps[i,:])
+    for i in range(window_length-1):
+        s2 += pl.dot(window_steps[i,:],window_steps[i,:])
 
-    efficiency = disp/(windowLength*s2+epsilon)
+    efficiency = disp/(window_length*s2+epsilon)
     
     return efficiency
 
@@ -35,30 +35,35 @@ def get_asymm(eig1,eig2):
     asymmetry = -pl.log(1-((eig1-eig2)**2./(2*(eig1+eig2)**2.+epsilon)))
     return asymmetry
 
-def get_skew(projection,proj_mean,windowLength):
+def get_skew(projection,proj_mean,window_length):
     num = 0
     denom = 0
     proj_mean = pl.mean(projection)
 
-    for i in range(windowLength):
+    for i in range(window_length):
         num += (projection[i] - proj_mean)**3.
         denom += (projection[i] - proj_mean)**2.
 
     denom = denom**(3./2.)
-    skewness = math.sqrt(windowLength+1)*(num/(denom+epsilon))
+    skewness = math.sqrt(window_length+1)*(num/(denom+epsilon))
     return skewness
 
-def get_kurt(projection,proj_mean,windowLength):
+def get_kurt(projection,proj_mean,window_length):
     num = 0
     denom = 0
 
-    for i in range(windowLength):
+    for i in range(window_length):
         num += (projection[i] - proj_mean)**4.
         denom += (projection[i] - proj_mean)**2.
 
     denom = denom**(2.)
-    skewness = (windowLength+1)*(num/(denom+epsilon))
+    skewness = (window_length+1)*(num/(denom+epsilon))
     return skewness
+
+def get_disp(window_positions):
+    displacement = pl.norm(window_positions[-1] - window_positions[0])
+    return displacement
+
 
 # Intermediate Functions
 
@@ -94,20 +99,20 @@ def get_angles(steps,trackLength):
 
     return angles
 
-def get_gyration_tensor(windowPositions):
+def get_gyration_tensor(window_positions):
     gyrationTensor = pl.zeros([2,2])
-    x = windowPositions[:,0]
-    y = windowPositions[:,1]
+    x = window_positions[:,0]
+    y = window_positions[:,1]
     gyrationTensor[0,0] = pl.mean(x**2.) - pl.mean(x)**2.
     gyrationTensor[0,1] = pl.mean(x*y) - (pl.mean(x)*pl.mean(y))
     gyrationTensor[1,0] = gyrationTensor[0,1]
     gyrationTensor[1,1] = pl.mean(y**2.) - pl.mean(y)**2.
     return gyrationTensor
 
-def get_projection(windowPositions,domEig,windowLength):
-    s_proj = pl.zeros([windowLength,1])
-    for i in range(windowLength):
-        s_proj[i] = pl.dot(windowPositions[i,:],domEig)
+def get_projection(window_positions,domEig,window_length):
+    s_proj = pl.zeros([window_length,1])
+    for i in range(window_length):
+        s_proj[i] = pl.dot(window_positions[i,:],domEig)
     return s_proj
 
 
@@ -149,7 +154,7 @@ class FeatureSpace():
 
                 feats[i:i+j,4] += get_skew(pos_proj,proj_mean,j-1)
                 feats[i:i+j,5] += get_kurt(pos_proj,proj_mean,j-1)
-                #feats[i:i+j,6] +=
+                feats[i:i+j,6] += get_disp(positions[i:i+j,:])
 
                 manyTimes[i:i+j] += 1
 
