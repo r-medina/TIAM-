@@ -36,12 +36,14 @@ def get_dataframe():
 
     features_dict = {}
 
+    feat_space = fs.FeatureSpace()
+
     for i in range(howMany):
         pos = pl.array([data_panel[i].dropna(axis=0)['x'], \
                         data_panel[i].dropna(axis=0)['y']])
         pos = pl.transpose(pos)
         features_dict[i] = pd.DataFrame( \
-            fs.FeatureSpace.get_features(pos), columns=feature_names)
+            feat_space.get_features(pos), columns=feature_names)
 
     features_panel = pd.Panel(features_dict)
         
@@ -61,7 +63,7 @@ def get_dataframe():
     label_array = pl.transpose(label_array)
 
     feats_done = 7
-    for i in range(fs.FeatureSpace.many_features):
+    for i in range(feat_space.many_features):
         a = label_array
         b = feat_array
         pl.figure(i)
