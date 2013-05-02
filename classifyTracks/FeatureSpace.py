@@ -122,7 +122,7 @@ class FeatureSpace():
     
     @staticmethod
     def get_features(positions):
-        manyFeatures = 7
+        many_features = 7
 
         wMin = 5
         wMax = 14
@@ -132,7 +132,7 @@ class FeatureSpace():
         steps = get_steps(positions,trackLength)
         angles = get_angles(steps,trackLength)
         
-        feats = pl.zeros([trackLength,manyFeatures])
+        feats = pl.zeros([trackLength,many_features])
         manyTimes = pl.zeros(trackLength)
 
         for i in range(trackLength-wMax+1):
@@ -178,7 +178,7 @@ class FeatureSpace():
             manyTimes[i:i+j] += 1
         '''
 
-        for i in range(manyFeatures):
+        for i in range(many_features):
             feats[:,i] /= manyTimes
 
 

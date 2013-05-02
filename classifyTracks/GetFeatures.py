@@ -61,7 +61,7 @@ def get_dataframe():
     label_array = pl.transpose(label_array)
 
     feats_done = 7
-    for i in range(feats_done):
+    for i in range(fs.FeatureSpace.many_features):
         a = label_array
         b = feat_array
         pl.figure(i)
@@ -83,4 +83,5 @@ def get_dataframe():
     pl.show()
 
 
-get_dataframe()
+if __name__ == "__main__":
+    get_dataframe()
