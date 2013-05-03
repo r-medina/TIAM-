@@ -140,7 +140,7 @@ class FeatureSpace():
     def get_features(self,positions):
 
         wMin = 5
-        wMax = 17
+        wMax = 18
 
         trackLength = pl.shape(positions)[0]
         
