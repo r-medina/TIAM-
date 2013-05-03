@@ -1,7 +1,7 @@
 import pylab as pl
 import math
 
-epsilon = 0.00001;
+epsilon = 0.0000001;
 
 
 # Main Class
@@ -140,7 +140,7 @@ class FeatureSpace():
     def get_features(self,positions):
 
         wMin = 5
-        wMax = 14
+        wMax = 17
 
         trackLength = pl.shape(positions)[0]
         

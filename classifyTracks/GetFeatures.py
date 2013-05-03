@@ -63,10 +63,11 @@ def get_dataframe():
     label_array = pl.transpose(label_array)
 
     feats_done = 7
+    pl.figure()
     for i in range(feat_space.many_features):
         a = label_array
         b = feat_array
-        pl.figure(i)
+        #pl.figure(i)
         pl.hold()
         if (i==2):
             counts0, bins0 = pl.histogram(b[a==0,i],100,range=(0.,0.08))
@@ -80,6 +81,7 @@ def get_dataframe():
         else:
             counts0, bins0 = pl.histogram(b[a==0,i],100)
             counts1, bins1 = pl.histogram(b[a==1,i],100)
+        pl.subplot(2,4,i+1)
         pl.plot(bins0[0:100],counts0,'r',bins1[0:100],counts1,'b')
         pl.title(feature_names[i])
     pl.show()
