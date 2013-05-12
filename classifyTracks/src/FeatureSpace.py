@@ -8,7 +8,7 @@ epsilon = 0.0000001;
 
 class FeatureSpace():
     
-    many_features = 7
+    many_features = 8
 
     # Intermediate Functions
 
@@ -21,7 +21,7 @@ class FeatureSpace():
 
     @staticmethod
     def get_angles(steps,trackLength):
-        angles = pl.zeros([trackLength-2,1])
+        angles = pl.zeros(trackLength-2)
         polar = pl.zeros(pl.shape(steps))
         for i in range(trackLength-1):
             polar[i,0] = pl.norm(steps[i,:])
@@ -59,10 +59,22 @@ class FeatureSpace():
 
     @staticmethod
     def get_projection(window_positions,domEig,window_length):
-        s_proj = pl.zeros([window_length,1])
+        s_proj = pl.zeros(window_length)
         for i in range(window_length):
             s_proj[i] = pl.dot(window_positions[i,:],domEig)
         return s_proj
+
+    @staticmethod
+    def get_msd(positions,track_length):
+        maxdt = 5#int(pl.floor((track_length-1)/4.))
+        msd = pl.zeros(maxdt)
+        for i in range(maxdt):
+            for j in range(maxdt):
+                ds = positions[i+j] - positions[j]
+                disp = pl.norm(ds)**2.
+                msd[i] += disp
+            msd[i] = msd[i]/maxdt
+        return msd
 
 
     # Features
@@ -133,7 +145,16 @@ class FeatureSpace():
     def get_disp(window_positions):
         displacement = pl.norm(window_positions[-1] - window_positions[0])
         return displacement
-    
+
+    @staticmethod
+    def get_conf(window_positions,window_length,diffusion_coefficient):
+        R = 0
+        for i in range(1,window_length):
+            d = pl.norm(window_positions[i,:])
+            if (d > R):
+                R = d
+        log_psi = 0.2048-2.5117*diffusion_coefficient*window_length/(R+epsilon);
+        return log_psi
 
     # Main method
 
@@ -149,6 +170,14 @@ class FeatureSpace():
         
         feats = pl.zeros([trackLength,self.many_features])
         manyTimes = pl.zeros(trackLength)
+
+        msd = self.get_msd(positions,trackLength)
+        xi = pl.arange(4)
+        A = pl.array([xi, pl.ones(4)]).T
+        #try:
+        diff_coeff = pl.lstsq(A,msd[:4])[0][0]
+        #except:
+        #    diff_coeff = pl.lstsq(A,msd[:2])[0][0]
 
         for i in range(trackLength-wMax+1):
             for j in range(wMin,wMax+1):
@@ -170,6 +199,7 @@ class FeatureSpace():
                 feats[i:i+j,4] += self.get_skew(pos_proj,proj_mean,j-1)
                 feats[i:i+j,5] += self.get_kurt(pos_proj,proj_mean,j-1)
                 feats[i:i+j,6] += self.get_disp(positions[i:i+j,:])
+                feats[i:i+j,7] += self.get_conf(positions[i:i+j,:],j-1,diff_coeff)
 
                 manyTimes[i:i+j] += 1
 

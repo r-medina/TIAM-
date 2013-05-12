@@ -1,13 +1,14 @@
 import pylab as pl
 import pickle
+import os
 
 from getfeatures import how_many, many_features, feature_names
 
-f_in = open('labels_panel.pk','r')
+f_in = open('../out/labels_panel.pk','r')
 labels_panel = pickle.load(f_in)
 f_in.close()
 
-f_in = open('features_panel.pk','r')
+f_in = open('../out/features_panel.pk','r')
 features_panel = pickle.load(f_in)
 f_in.close()
 
@@ -19,7 +20,7 @@ feat_array = pl.vstack([features_panel[0].dropna(axis=0)[:], \
 label_array = pl.hstack([labels_panel[0].dropna(axis=0)['labels'],\
                          labels_panel[1].dropna(axis=0)['labels']])
 
-for i in range(2,howMany):
+for i in range(2,how_many):
     feat_array = pl.vstack([feat_array, \
                             features_panel[i].dropna(axis=0)[:]])
     label_array = pl.hstack([label_array, \

@@ -11,7 +11,7 @@ data_dict = {}
 data_head = ['x', 'y', 'footprint']
 i = 0
 # grabs TIAM data
-for track in glob("../data/txtData/nveMemDonA/data/*"):
+for track in glob("../../data/txtData/nveMemDonA/data/*"):
     raw = pd.read_csv(track, names=data_head)
     data_dict[i] = raw
     i += 1
@@ -23,18 +23,18 @@ data_panel = pd.Panel(data_dict)
 labels_dict = {}
 i = 0
 # grabs labels
-for frame in glob("../data/txtData/nveMemDonA/labels/*"):
+for frame in glob("../../data/txtData/nveMemDonA/labels/*"):
     labels = pd.read_csv(frame, names=['labels'])
     labels_dict[i] = labels
     i += 1
 # loads the labels into a panel
 labels_panel = pd.Panel(labels_dict)
-f_out = open('labels_panel.pk','w')
+f_out = open('../out/labels_panel.pk','w')
 pickle.dump(labels_panel,f_out)
 f_out.close()
 
 feature_names = ['straightness', 'bending', 'efficiency', 'asymmetry',
-                 'skewness', 'kurtosis', 'displacement']
+                 'skewness', 'kurtosis', 'displacement', 'confinement']
 
 feat_space = fs.FeatureSpace()
 many_features = feat_space.many_features
@@ -51,7 +51,7 @@ def get_dataframe():
             feat_space.get_features(pos), columns=feature_names)
 
     features_panel = pd.Panel(features_dict)
-    f_out = open('features_panel.pk','w')
+    f_out = open('../out/features_panel.pk','w')
     pickle.dump(features_panel,f_out)
     f_out.close()
 
@@ -80,10 +80,10 @@ def get_dataframe():
     X = pd.DataFrame(feat_array,index=multi,columns=feature_names)
     Y = pd.DataFrame(label_array,index=multi,columns=['labels'])
 
-    f_out = open('X.pk','w')
+    f_out = open('../out/X.pk','w')
     pickle.dump(X,f_out)
     f_out.close()
-    f_out = open('Y.pk','w')
+    f_out = open('../out/Y.pk','w')
     pickle.dump(Y,f_out)
     f_out.close()
 
