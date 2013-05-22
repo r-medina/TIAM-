@@ -63,7 +63,7 @@ function [dataFolder, labelFolder] = makeFolders()
     
     chmkdir(folder);
     
-    dataFolder = strcat(folder,'data/attatched');
+    dataFolder = strcat(folder,'data/attached');
     labelFolder = strcat(folder,'labels/viv');
 
     chmkdir(dataFolder);

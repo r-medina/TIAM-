@@ -25,7 +25,7 @@ data_dict = {}
 data_head = ['x', 'y', 'footprint']
 i = 0
 # grabs TIAM data
-for track in glob("../../data/txtData/nveMemDonA/data/attatched/*"):
+for track in glob("../../data/txtData/nveMemDonA/data/attached/*"):
     raw = pd.read_csv(track, names=data_head)
     if raw.__len__() >= min_track_len:
         data_dict[i] = raw
