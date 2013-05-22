@@ -2,7 +2,7 @@ import pylab as pl
 import pickle
 import os
 
-from getfeatures import how_many, good_tracks, many_features, feature_names
+from getfeatures import good_tracks, many_features, feature_names
 
 f_in = open('../out/labels_panel.pk','r')
 labels_panel = pickle.load(f_in)
@@ -15,12 +15,12 @@ f_in.close()
 # make feat_array and label_arrays so that the following loop can
 # use vstack and hstack
 # we need the arrays to make histograms and such
-feat_array = pl.vstack([features_panel[0].dropna(axis=0)[:], \
-                        features_panel[1].dropna(axis=0)[:]])
-label_array = pl.hstack([labels_panel[0].dropna(axis=0)['labels'],\
-                         labels_panel[1].dropna(axis=0)['labels']])
+feat_array = pl.vstack([features_panel[good_tracks[0]].dropna(axis=0)[:], \
+                        features_panel[good_tracks[1]].dropna(axis=0)[:]])
+label_array = pl.hstack([labels_panel[good_tracks[0]].dropna(axis=0)['labels'],\
+                         labels_panel[good_tracks[1]].dropna(axis=0)['labels']])
 
-for i in range(2,how_many):
+for i in good_tracks[2:]:
     feat_array = pl.vstack([feat_array, \
                             features_panel[i].dropna(axis=0)[:]])
     label_array = pl.hstack([label_array, \
@@ -42,8 +42,8 @@ for i in range(many_features):
         counts0, bins0 = pl.histogram(b[a==0,i],100,range=(0,15))
         counts1, bins1 = pl.histogram(b[a==1,i],100,range=(0,15))
     elif (i==7):
-        counts0, bins0 = pl.histogram(b[a==0,i],100,range=(-3,0))
-        counts1, bins1 = pl.histogram(b[a==1,i],100,range=(-3,0))        
+        counts0, bins0 = pl.histogram(b[a==0,i],100,range=(-2,1))
+        counts1, bins1 = pl.histogram(b[a==1,i],100,range=(-2,1))        
     else:
         counts0, bins0 = pl.histogram(b[a==0,i],100)
         counts1, bins1 = pl.histogram(b[a==1,i],100)

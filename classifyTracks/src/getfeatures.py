@@ -7,16 +7,18 @@ import pickle
 
 import FeatureSpace as fs
 
+min_track_len = 20
 labels_dict = {}
 i = 0
 # grabs labels
 for frame in glob("../../data/txtData/nveMemDonA/labels/viv/*"):
     labels = pd.read_csv(frame, names=['labels'])
-    if labels.__len__() >= 20:
+    # the keys in the labels_dict dictionary will the index of the
+    # cell track in the labels and position data
+    if labels.__len__() >= min_track_len:
         labels_dict[i] = labels
     i += 1
-# keeps track of how many ar labeled
-how_many = labels_dict.__len__()
+# keeps track of the indicies of the 
 good_tracks = labels_dict.keys()
 
 data_dict = {}
@@ -25,7 +27,7 @@ i = 0
 # grabs TIAM data
 for track in glob("../../data/txtData/nveMemDonA/data/attatched/*"):
     raw = pd.read_csv(track, names=data_head)
-    if raw.__len__() >= 20:
+    if raw.__len__() >= min_track_len:
         data_dict[i] = raw
     i += 1
 
@@ -48,7 +50,6 @@ many_features = feat_space.many_features
 def get_dataframe():
     features_dict = {}
 
-    #for i in range(how_many):
     for i in good_tracks:
         pos = pl.array([data_panel[i].dropna(axis=0)['x'], \
                         data_panel[i].dropna(axis=0)['y']])
@@ -64,18 +65,11 @@ def get_dataframe():
     # make feat_array and label_arrays so that the following loop can
     # use vstack and hstack
     # we need the arrays to make histograms and such
-    '''
-    feat_array = pl.vstack([features_panel[0].dropna(axis=0)[:], \
-                            features_panel[1].dropna(axis=0)[:]])
-    label_array = pl.hstack([labels_panel[0].dropna(axis=0)['labels'],\
-                             labels_panel[1].dropna(axis=0)['labels']])
-    '''
     feat_array = pl.vstack([features_panel[good_tracks[0]].dropna(axis=0)[:], \
                             features_panel[good_tracks[1]].dropna(axis=0)[:]])
     label_array = pl.hstack([labels_panel[good_tracks[0]].dropna(axis=0)['labels'],\
                              labels_panel[good_tracks[1]].dropna(axis=0)['labels']])
     
-    #for i in range(2,how_many):
     for i in good_tracks[2:]:
         feat_array = pl.vstack([feat_array, \
                                 features_panel[i].dropna(axis=0)[:]])
@@ -84,7 +78,6 @@ def get_dataframe():
     label_array = pl.transpose(label_array)
 
     pairs = []
-    #for track in range(how_many):
     for track in good_tracks:
         for i in range(len(labels_panel[track].dropna(axis=0).index)):
             pairs.append((track,i))
