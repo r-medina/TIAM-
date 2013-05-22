@@ -218,7 +218,7 @@ end
 
 
 function [angles] = getAngle(steps,trackLength)
-    angles = zeros(trackLength-2,2);
+    angles = zeros(trackLength-2,1);
     %for i = 1:trackLength-2
     %    v1 = steps(i,:);
     %    v2 = steps(i+1,:);
@@ -244,7 +244,7 @@ function [angles] = getAngle(steps,trackLength)
     end
 
     for i = 1:trackLength-2    
-        angles(i,:) = polar(i+1,2)-polar(i,2);
+        angles(i) = polar(i+1,2)-polar(i,2);
     end
 end
 

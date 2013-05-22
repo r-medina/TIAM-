@@ -42,7 +42,7 @@ function runTrajFeat()
         featureCell{i} = [featureCell{i},labelCell{i}(1:featLen)];
         
         % stops loop prematurely for run time
-        if i == 5
+        if i == 40
             break;
         end
     end
@@ -54,6 +54,9 @@ function runTrajFeat()
     % turn the feature cell into a matrix for easy manipulation
     featureMat = cell2mat(featureCell);
 
+    %featureMat(:,[1,2,8])
+    %return;
+
     % sort the matrix on the last column (for the labels)
     featureMat = sortrows(featureMat,lastCol);
     for i = 1:length(featureMat)
@@ -64,6 +67,9 @@ function runTrajFeat()
     end
     manyPoints = length(featureMat);
     featureMat = featureMat(whengood:manyPoints,:);
+
+    save('featureAndLabelMatrix','featureMat');
+    return;
     manyPoints = length(featureMat);
 
     options = statset('maxiter',40000,'display','iter');

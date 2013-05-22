@@ -41,6 +41,9 @@ for i in range(many_features):
     elif (i==6):
         counts0, bins0 = pl.histogram(b[a==0,i],100,range=(0,15))
         counts1, bins1 = pl.histogram(b[a==1,i],100,range=(0,15))
+    elif (i==7):
+        counts0, bins0 = pl.histogram(b[a==0,i],100,range=(-3,0))
+        counts1, bins1 = pl.histogram(b[a==1,i],100,range=(-3,0))        
     else:
         counts0, bins0 = pl.histogram(b[a==0,i],100)
         counts1, bins1 = pl.histogram(b[a==1,i],100)
