@@ -1,11 +1,12 @@
 import numpy as np
+import pandas as pd
 import pickle
-from sklearn import hmm
+from sklearn import preprocessing, svm, hmm, metrics, cross_validation
 
 # features
-X = pickle.load(open('X.pk', 'r'))
+X = pickle.load(open('../out/X.pk', 'r'))
 # labels
-Y = pickle.load(open('Y.pk', 'r'))
+Y = pickle.load(open('../out/Y.pk', 'r'))
 
 # clip range for each feature
 clip = {'straightness': [-0.5, 1.0],
@@ -21,7 +22,7 @@ for feat in clip:
     X[feat][X[feat]>clip[feat][1]] = clip[feat][1]
 
 # hmm analysis pukes if this feature is included
-X = X.drop('confinement', 1)
+#X = X.drop('confinement', 1)
 
 # get list of tracks and list of labels
 xs = []
@@ -49,11 +50,11 @@ model = hmm.GaussianHMM(
 model.fit(xs)
 # get states. note: this is a list, containing all tracks where y!=-1
 y_hmm = [model.decode(x)[1] for x in xs]
-
+print y_hmm
 
 # run SVM analysis
-from sklearn import preprocessing, svm, metrics, cross_validation
 x = np.concatenate(xs, 0)
+x_scaled = preprocessing.scale(x)
 y = np.concatenate(ys, 0)
 kfold = cross_validation.StratifiedKFold(y,10)
 svc = svm.SVC()
@@ -61,3 +62,4 @@ performance = cross_validation.cross_val_score(svc, x_scaled, y, cv=kfold, n_job
 svc.fit(x_scaled, y)
 # note: this is length 8800, all tracks concatenated
 y_svc = svc.predict(x_scaled)
+print y_svc
