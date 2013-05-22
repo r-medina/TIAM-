@@ -2,13 +2,13 @@ function matToText()
 % This function converts data for TIAM tool and TIAM+ track label
 % GUI to text files to be loaded by python
 
-    data = load(fullfile('..','..','data','020512_hCD8','nveMemDonA_020512_v2_results.mat'));
+    data = load(fullfile('..','..','data','020512_hCD8','nveMemDonA_020512_v2attached.mat'));
     % put path to TIAM mat files here
     
     data = data.datacell;
     % when saving .mat files, the data becomes burried one level in
     
-    labelFileNames = dir(fullfile('..','..','labelTracks','classMats','batch*'));
+    labelFileNames = dir(fullfile('..','..','labelTracks','classMats','all*'));
     % use  globbing to catch all the files with track labels
     
     labels = cell(length(labelFileNames),1);
@@ -63,8 +63,8 @@ function [dataFolder, labelFolder] = makeFolders()
     
     chmkdir(folder);
     
-    dataFolder = strcat(folder,'data');
-    labelFolder = strcat(folder,'labels');
+    dataFolder = strcat(folder,'data/attatched');
+    labelFolder = strcat(folder,'labels/viv');
 
     chmkdir(dataFolder);
     chmkdir(labelFolder);
