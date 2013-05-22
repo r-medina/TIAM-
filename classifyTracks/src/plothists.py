@@ -2,7 +2,7 @@ import pylab as pl
 import pickle
 import os
 
-from getfeatures import how_many, many_features, feature_names
+from getfeatures import how_many, good_tracks, many_features, feature_names
 
 f_in = open('../out/labels_panel.pk','r')
 labels_panel = pickle.load(f_in)

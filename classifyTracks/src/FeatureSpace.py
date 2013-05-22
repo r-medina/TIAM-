@@ -66,15 +66,26 @@ class FeatureSpace():
 
     @staticmethod
     def get_msd(positions,track_length):
-        maxdt = 5#int(pl.floor((track_length-1)/4.))
-        msd = pl.zeros(maxdt)
-        for i in range(maxdt):
-            for j in range(maxdt):
-                ds = positions[i+j] - positions[j]
-                disp = pl.norm(ds)**2.
-                msd[i] += disp
-            msd[i] = msd[i]/maxdt
-        return msd
+        try:
+            maxdt = 5#int(pl.floor((track_length-1)/4.))
+            msd = pl.zeros(maxdt)
+            for i in range(maxdt):
+                for j in range(maxdt):
+                    ds = positions[i+j] - positions[j]
+                    disp = pl.norm(ds)**2.
+                    msd[i] += disp
+                msd[i] = msd[i]/maxdt
+            return msd
+        except IndexError:
+            maxdt = 3#int(pl.floor((track_length-1)/4.))
+            msd = pl.zeros(maxdt)
+            for i in range(maxdt):
+                for j in range(maxdt):
+                    ds = positions[i+j] - positions[j]
+                    disp = pl.norm(ds)**2.
+                    msd[i] += disp
+                msd[i] = msd[i]/maxdt
+            return msd
 
 
     # Features
@@ -172,39 +183,39 @@ class FeatureSpace():
         manyTimes = pl.zeros(trackLength)
 
         msd = self.get_msd(positions,trackLength)
+        # following code is to get diffusion coefficient
         xi = pl.arange(4)
         A = pl.array([xi, pl.ones(4)]).T
-        #try:
-        diff_coeff = pl.lstsq(A,msd[:4])[0][0]
-        #except:
-        #    diff_coeff = pl.lstsq(A,msd[:2])[0][0]
+        try:
+            diff_coeff = pl.lstsq(A,msd[:4])[0][0]
+        except:
+            diff_coeff = pl.lstsq(A[:2],msd[:2])[0][0]
 
         for i in range(trackLength-wMax+1):
             for j in range(wMin,wMax+1):
-                feats[i:i+j,0] += self.get_straight(angles[i:i+j-2],j-1)
-                feats[i:i+j,1] += self.get_bend(angles[i:i+j-2],j-1)
-                feats[i:i+j,2] += self.get_eff(positions[i:i+j,:],steps[i:i+j-1,:],j-1)
-                
+                feats[i:i+j,0] += 1#self.get_straight(angles[i:i+j-2],j-1)
+                feats[i:i+j,1] += 1#self.get_bend(angles[i:i+j-2],j-1)
+                feats[i:i+j,2] += 1#self.get_eff(positions[i:i+j,:],steps[i:i+j-1,:],j-1)
+                '''
                 gyrationTensor = self.get_gyration_tensor(positions[i:i+j,:])
                 [eig_vals, eig_vecs] = pl.eig(gyrationTensor)
                 eig_vals = pl.array([eig_vals[0],eig_vals[1]])
-
-                feats[i:i+j,3] += self.get_asymm(eig_vals[0],eig_vals[1])
-
+                '''
+                feats[i:i+j,3] += 1#self.get_asymm(eig_vals[0],eig_vals[1])
+                '''
                 dom_index = pl.argmax(eig_vals)
                 dom_vec = eig_vecs[:,dom_index]
                 pos_proj = self.get_projection(positions[i:i+j,:],dom_vec,j-1)
                 proj_mean = pl.mean(pos_proj)
-
-                feats[i:i+j,4] += self.get_skew(pos_proj,proj_mean,j-1)
-                feats[i:i+j,5] += self.get_kurt(pos_proj,proj_mean,j-1)
-                feats[i:i+j,6] += self.get_disp(positions[i:i+j,:])
-                feats[i:i+j,7] += self.get_conf(positions[i:i+j,:],j-1,diff_coeff)
+                '''
+                feats[i:i+j,4] += 1#self.get_skew(pos_proj,proj_mean,j-1)
+                feats[i:i+j,5] += 1#self.get_kurt(pos_proj,proj_mean,j-1)
+                feats[i:i+j,6] += 1#self.get_disp(positions[i:i+j,:])
+                feats[i:i+j,7] += 1#self.get_conf(positions[i:i+j,:],j-1,diff_coeff)
 
                 manyTimes[i:i+j] += 1
 
         for i in range(self.many_features):
             feats[:,i] /= manyTimes
-
 
         return feats
