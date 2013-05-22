@@ -7,26 +7,30 @@ import pickle
 
 import FeatureSpace as fs
 
+labels_dict = {}
+i = 0
+# grabs labels
+for frame in glob("../../data/txtData/nveMemDonA/labels/viv/*"):
+    labels = pd.read_csv(frame, names=['labels'])
+    labels_dict[i] = labels
+    i += 1
+# keeps track of how many ar labeled
+how_many = i
+how_many = 2
+
 data_dict = {}
 data_head = ['x', 'y', 'footprint']
 i = 0
 # grabs TIAM data
-for track in glob("../../data/txtData/nveMemDonA/data/*"):
-    raw = pd.read_csv(track, names=data_head)
-    data_dict[i] = raw
-    i += 1
-how_many = i
+while (i <= how_many):
+    for track in glob("../../data/txtData/nveMemDonA/data/*"):
+        raw = pd.read_csv(track, names=data_head)
+        data_dict[i] = raw
+        i += 1
 
 # loads the data into a pandas panel
 data_panel = pd.Panel(data_dict)
 
-labels_dict = {}
-i = 0
-# grabs labels
-for frame in glob("../../data/txtData/nveMemDonA/labels/*"):
-    labels = pd.read_csv(frame, names=['labels'])
-    labels_dict[i] = labels
-    i += 1
 # loads the labels into a panel
 labels_panel = pd.Panel(labels_dict)
 f_out = open('../out/labels_panel.pk','w')
@@ -76,6 +80,9 @@ def get_dataframe():
             pairs.append((track,i))
 
     multi = pd.MultiIndex.from_tuples(pairs, names=['track', 'frame'])
+
+    print multi
+    print feat_array.shape
 
     X = pd.DataFrame(feat_array,index=multi,columns=feature_names)
     Y = pd.DataFrame(label_array,index=multi,columns=['labels'])
