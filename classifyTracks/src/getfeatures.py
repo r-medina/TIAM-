@@ -36,9 +36,6 @@ data_panel = pd.Panel(data_dict)
 
 # loads the labels into a panel
 labels_panel = pd.Panel(labels_dict)
-f_out = open('../out/labels_panel.pk','w')
-pickle.dump(labels_panel,f_out)
-f_out.close()
 
 feature_names = ['straightness', 'bending', 'efficiency', 'asymmetry',
                  'skewness', 'kurtosis', 'displacement', 'confinement']
@@ -58,9 +55,6 @@ def get_dataframe():
             feat_space.get_features(pos), columns=feature_names)
 
     features_panel = pd.Panel(features_dict)
-    f_out = open('../out/features_panel.pk','w')
-    pickle.dump(features_panel,f_out)
-    f_out.close()
 
     # make feat_array and label_arrays so that the following loop can
     # use vstack and hstack

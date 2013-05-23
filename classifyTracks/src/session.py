@@ -53,7 +53,7 @@ model.fit(xs)
 # get states. note: this is a list, containing all tracks where y!=-1
 y_hmm = [model.decode(x)[1] for x in xs]
 Y_hmm = pd.DataFrame(np.concatenate(y_hmm)[:,None],index=Y.index, columns=['labels'])
-pickle.dump(Y_hmm, open('Y_hmm.pk', 'w'))
+pickle.dump(Y_hmm, open('../out/Y_hmm.pk', 'w'))
 print y_hmm
 
 # run SVM analysis
@@ -67,4 +67,4 @@ svc.fit(x_scaled, y)
 # note: this is length 8800, all tracks concatenated
 y_svm = svc.predict(x_scaled)
 Y_svm = pd.DataFrame(y_svm[:,None],index=Y.index, columns=['labels'])
-pickle.dump(Y_svm, open('Y_svm.pk', 'w'))
+pickle.dump(Y_svm, open('../out/Y_svm.pk', 'w'))
