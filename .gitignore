@@ -2,3 +2,10 @@
 *.pk
 auto/
 */auto/
+*.toc
+*.synctex.gz
+*.snm
+*.out
+*.nav
+*.log
+*.aux
