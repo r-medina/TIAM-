@@ -29,8 +29,8 @@ xs = []
 ys = []
 D = pd.merge(X, Y, left_index=True, right_index=True)
 for n, track in D.groupby(level=0):
-    y = np.array(track['labels'])
     x = np.array(track.drop('labels', 1))
+    y = np.array(track['labels'])
     # do not include tracks where y == -1    
     msk = (y >= 0)
     if any(msk):
@@ -54,7 +54,6 @@ model.fit(xs)
 y_hmm = [model.decode(x)[1] for x in xs]
 Y_hmm = pd.DataFrame(np.concatenate(y_hmm)[:,None],index=Y.index, columns=['labels'])
 pickle.dump(Y_hmm, open('../out/Y_hmm.pk', 'w'))
-print y_hmm
 
 # run SVM analysis
 x = np.concatenate(xs, 0)
@@ -62,9 +61,10 @@ x_scaled = preprocessing.scale(x)
 y = np.concatenate(ys, 0)
 kfold = cross_validation.StratifiedKFold(y,10)
 svc = svm.SVC()
-performance = cross_validation.cross_val_score(svc, x_scaled, y, cv=kfold, n_jobs=-1)
 svc.fit(x_scaled, y)
 # note: this is length 8800, all tracks concatenated
 y_svm = svc.predict(x_scaled)
 Y_svm = pd.DataFrame(y_svm[:,None],index=Y.index, columns=['labels'])
+#performance = cross_validation.cross_val_score(svc, x_scaled, y, cv=kfold, n_jobs=-1)
 pickle.dump(Y_svm, open('../out/Y_svm.pk', 'w'))
+#print performance

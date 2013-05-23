@@ -8,26 +8,7 @@ from getfeatures import good_tracks, many_features, feature_names
 
 def plothists(X,Y,title,name):
     # get list of tracks and list of labels
-    '''
-    xs = pl.zeros([1,8])
-    ys = pl.zeros([1,])
-    D = pd.merge(X, Y, left_index=True, right_index=True)
-    for n, track in D.groupby(level=0):
-        x = pl.array(track.drop('labels', 1))
-        y = pl.array(track['labels'])
-        # do not include tracks where y == -1    
-        msk = (y >= 0)
-        if any(msk):
-            #xs.append(x[y >= 0])
-            xs = pl.vstack([xs,(x[y >= 0])])
-            #ys.append(y[y >= 0])
-            ys = pl.append(ys,(y[y >= 0]))
-        else:
-            print n
-    '''
-    #xs = xs[1:,:]
     xs = X.values
-    #ys = ys[1:]
     ys = Y.values
     ys = pl.reshape(ys,[ys.shape[0],])
     
