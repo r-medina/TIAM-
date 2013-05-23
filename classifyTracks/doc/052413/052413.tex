@@ -33,7 +33,7 @@
     classification
   \item [$\checkmark$] find a supervised machine learning model that will work for
     the task at hand \emph{and} that will properly segment the cell tracks
-  \item [?] develop an unsupervised generative model (HMM) with the help of Sakellarious Zairis and Jan-Willem van de Meent
+  \item [$\checkmark$] develop an unsupervised generative model (HMM) with the help of Sakellarious Zairis and Jan-Willem van de Meent
   \end{itemize}
 \end{frame}
 
@@ -48,7 +48,7 @@
 
 \begin{frame}
   \frametitle{SVM Performance}
-  Running the classifier on all data for which we have supervised labels (110 full
+  Running an SVM classifier on all data for which we have supervised labels (110 full
   trajectories with IRM channel data) gives the following result:
   \center{\begin{tabular}{r c|c l}
     true unconfined & 5048 & 454 & false confined \\
@@ -73,7 +73,32 @@
   
 \end{frame}
 
+\begin{frame}
+  \frametitle{HMM Performance}
+  Using an HMM on all data for which we have supervised labels (110 full
+  trajectories with IRM channel data) gives the following result:
+  \center{\begin{tabular}{r c|c l}
+    true unconfined & 5280 & 2348 & false confined \\
+    \hline
+    false unconfined & 255 & 6822 & true confined \\
+  \end{tabular}}
+  \begin{itemize}
+  \item sensitivity: 0.692
+  \item specificity: 0.964
+  \item accuracy: 0.823
+  \end{itemize}
+  Woo!
+\end{frame}
 
+\begin{frame}
+  \frametitle{HMM Histograms}
+  \begin{figure}[H]\centering
+    \includegraphics[width=\textwidth]{../../out/hmm_hist.png}
+  \end{figure}
+  \bigskip {\small \colorbox{red}{``Confined''} 
+    \colorbox{blue}{``Not Confined''}}
+  
+\end{frame}
 
 
 \end{document}

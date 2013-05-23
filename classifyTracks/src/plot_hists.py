@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 import os
 
-from getfeatures import good_tracks, many_features, feature_names
+from get_features import good_tracks, many_features, feature_names
 
 
 def plothists(X,Y,title,name):
@@ -44,6 +44,7 @@ Y = pickle.load(open('../out/Y.pk', 'r'))
 plothists(X,Y,'Human Labeled','supervised_hist')
 
 Y = pickle.load(open('../out/Y_hmm.pk', 'r'))
+Y = (Y-1)*-1
 plothists(X,Y,'HMM','hmm_hist')
 
 Y = pickle.load(open('../out/Y_svm.pk', 'r'))
