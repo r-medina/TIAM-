@@ -31,10 +31,12 @@ def test(y_sup,y_pred):
 
 Y = pickle.load(open('../out/Y.pk', 'r'))
 Y_hmm = pickle.load(open('../out/Y_hmm.pk', 'r'))
-Y_hmm = (Y_hmm - 1)*-1
 Y_svm = pickle.load(open('../out/Y_svm.pk', 'r'))
 
 hmm_acc = accuracy(Y,Y_hmm)
+if (hmm_acc < 0.5):
+    Y_hmm = (Y_hmm - 1)*-1
+    hmm_acc = accuracy(Y,Y_hmm)
 svm_acc = accuracy(Y,Y_svm)
 
 hmm_conf, hmm_sens, hmm_spec = test(Y,Y_hmm)

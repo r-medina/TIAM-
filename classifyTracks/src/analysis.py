@@ -67,4 +67,3 @@ y_svm = svc.predict(x_scaled)
 Y_svm = pd.DataFrame(y_svm[:,None],index=Y.index, columns=['labels'])
 #performance = cross_validation.cross_val_score(svc, x_scaled, y, cv=kfold, n_jobs=-1)
 pickle.dump(Y_svm, open('../out/Y_svm.pk', 'w'))
-#print performance

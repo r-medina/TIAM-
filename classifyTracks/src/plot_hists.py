@@ -37,15 +37,16 @@ def plothists(X,Y,title,name):
     pl.savefig("../out/{0}".format(name),bbox_inches='tight')
 
 
-# features
-X = pickle.load(open('../out/X.pk', 'r'))
-# labels
-Y = pickle.load(open('../out/Y.pk', 'r'))
-plothists(X,Y,'Human Labeled','supervised_hist')
+if __name__ == "__main__":
+    # features
+    X = pickle.load(open('../out/X.pk', 'r'))
+    # labels
+    Y = pickle.load(open('../out/Y.pk', 'r'))
+    plothists(X,Y,'Human Labeled','supervised_hist')
 
-Y = pickle.load(open('../out/Y_hmm.pk', 'r'))
-Y = (Y-1)*-1
-plothists(X,Y,'HMM','hmm_hist')
+    Y = pickle.load(open('../out/Y_hmm.pk', 'r'))
+    Y = (Y-1)*-1
+    plothists(X,Y,'HMM','hmm_hist')
 
-Y = pickle.load(open('../out/Y_svm.pk', 'r'))
-plothists(X,Y,'SVM','svm_hist')
+    Y = pickle.load(open('../out/Y_svm.pk', 'r'))
+    plothists(X,Y,'SVM','svm_hist')

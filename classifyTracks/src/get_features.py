@@ -81,12 +81,8 @@ def get_dataframe():
     X = pd.DataFrame(feat_array,index=multi,columns=feature_names)
     Y = pd.DataFrame(label_array,index=multi,columns=['labels'])
 
-    f_out = open('../out/X.pk','w')
-    pickle.dump(X,f_out)
-    f_out.close()
-    f_out = open('../out/Y.pk','w')
-    pickle.dump(Y,f_out)
-    f_out.close()
+    pickle.dump(X,open('../out/X.pk','w'))
+    pickle.dump(Y,open('../out/Y.pk','w'))
 
     
 if __name__ == "__main__":
