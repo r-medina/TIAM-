@@ -13,17 +13,17 @@ class FeatureSpace():
     # Intermediate Functions
 
     @staticmethod
-    def get_steps(positions,trackLength):
-        steps = pl.zeros([trackLength-1,2])
-        for i in range(trackLength-1):
+    def get_steps(positions,track_length):
+        steps = pl.zeros([track_length-1,2])
+        for i in range(track_length-1):
             steps[i,:] = positions[i+1,:]-positions[i,:]
         return steps
 
     @staticmethod
-    def get_angles(steps,trackLength):
-        angles = pl.zeros(trackLength-2)
+    def get_angles(steps,track_length):
+        angles = pl.zeros(track_length-2)
         polar = pl.zeros(pl.shape(steps))
-        for i in range(trackLength-1):
+        for i in range(track_length-1):
             polar[i,0] = pl.norm(steps[i,:])
             polar[i,1] = pl.arctan(steps[i,0]/steps[i,1])
 
@@ -41,7 +41,7 @@ class FeatureSpace():
                 elif (steps[i,1] < 0):
                     polar[i,1] += pl.pi
 
-        for i in range(trackLength-2):
+        for i in range(track_length-2):
             angles[i] = polar[i+1,1] - polar[i,1]
 
         return angles
@@ -154,7 +154,6 @@ class FeatureSpace():
                 R = d
         log_psi = 0.2048-2.5117*diffusion_coefficient*window_length/(R+epsilon);
         L = -log_psi-1
-        
         return L
 
     # Main method
@@ -164,21 +163,21 @@ class FeatureSpace():
         wMin = 5
         wMax = 18
 
-        trackLength = pl.shape(positions)[0]
+        track_length = pl.shape(positions)[0]
         
-        steps = self.get_steps(positions,trackLength)
-        angles = self.get_angles(steps,trackLength)
+        steps = self.get_steps(positions,track_length)
+        angles = self.get_angles(steps,track_length)
         
-        feats = pl.zeros([trackLength,self.many_features])
-        manyTimes = pl.zeros(trackLength)
+        feats = pl.zeros([track_length,self.many_features])
+        manyTimes = pl.zeros(track_length)
 
-        msd = self.get_msd(positions,trackLength)
+        msd = self.get_msd(positions,track_length)
         # following code is to get diffusion coefficient
         xi = pl.arange(4)
         A = pl.array([xi, pl.ones(4)]).T
         diff_coeff = pl.lstsq(A,msd[:4])[0][0]
 
-        for i in range(trackLength-wMax+1):
+        for i in range(track_length-wMax+1):
             for j in range(wMin,wMax+1):
                 feats[i:i+j,0] += self.get_straight(angles[i:i+j-2],j-1)
                 feats[i:i+j,1] += self.get_bend(angles[i:i+j-2],j-1)

@@ -5,6 +5,7 @@ import os
 
 from get_features import good_tracks, many_features, feature_names
 
+which_exp = 'nveMem'
 
 def plothists(X,Y,title,name):
     # get list of tracks and list of labels
@@ -34,19 +35,19 @@ def plothists(X,Y,title,name):
         pl.plot(bins0[0:100],counts0,'r',bins1[0:100],counts1,'b')
         pl.title(feature_names[i])
     pl.tight_layout()
-    pl.savefig("../out/{0}".format(name),bbox_inches='tight')
+    pl.savefig("../out/{0}/{1}".format(which_exp,name),bbox_inches='tight')
 
 
 if __name__ == "__main__":
     # features
-    X = pickle.load(open('../out/X.pk', 'r'))
+    X = pickle.load(open('../out/{0}/X.pk'.format(which_exp), 'r'))
     # labels
-    Y = pickle.load(open('../out/Y.pk', 'r'))
+    Y = pickle.load(open('../out/{0}/Y_proc.pk'.format(which_exp), 'r'))
     plothists(X,Y,'Human Labeled','supervised_hist')
 
-    Y = pickle.load(open('../out/Y_hmm.pk', 'r'))
+    Y = pickle.load(open('../out/{0}/Y_hmm.pk'.format(which_exp), 'r'))
     Y = (Y-1)*-1
     plothists(X,Y,'HMM','hmm_hist')
 
-    Y = pickle.load(open('../out/Y_svm.pk', 'r'))
+    Y = pickle.load(open('../out/{0}/Y_svm.pk'.format(which_exp), 'r'))
     plothists(X,Y,'SVM','svm_hist')

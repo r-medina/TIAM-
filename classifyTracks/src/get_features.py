@@ -1,4 +1,4 @@
-# Module that generates the panda data frame
+# Module that generates the pandas data frame
 
 import pylab as pl
 import pandas as pd
@@ -7,11 +7,15 @@ import pickle
 
 import FeatureSpace as fs
 
+
+which_exp = 'nveMem'
+
 min_track_len = 20
 labels_dict = {}
 i = 0
 # grabs labels
-for frame in glob("../../data/txtData/nveMemDonA/labels/viv/*"):
+#for frame in glob('../../data/txtData/nveMemDonA/labels/viv/*'):
+for frame in glob('../../data/txtData/{0}/labels/*'.format(which_exp)):
     labels = pd.read_csv(frame, names=['labels'])
     # the keys in the labels_dict dictionary will the index of the
     # cell track in the labels and position data
@@ -25,7 +29,8 @@ data_dict = {}
 data_head = ['x', 'y', 'footprint']
 i = 0
 # grabs TIAM data
-for track in glob("../../data/txtData/nveMemDonA/data/attached/*"):
+#for track in glob("../../data/txtData/nveMemDonA/data/attached/*"):
+for track in glob("../../data/txtData/{0}/data/orig/*".format(which_exp)):
     raw = pd.read_csv(track, names=data_head)
     if raw.__len__() >= min_track_len:
         data_dict[i] = raw
@@ -44,9 +49,8 @@ feat_space = fs.FeatureSpace()
 many_features = feat_space.many_features
 
 
-def get_dataframe():
+def get_features():
     features_dict = {}
-
     for i in good_tracks:
         pos = pl.array([data_panel[i].dropna(axis=0)['x'], \
                         data_panel[i].dropna(axis=0)['y']])
@@ -81,9 +85,10 @@ def get_dataframe():
     X = pd.DataFrame(feat_array,index=multi,columns=feature_names)
     Y = pd.DataFrame(label_array,index=multi,columns=['labels'])
 
-    pickle.dump(X,open('../out/X.pk','w'))
-    pickle.dump(Y,open('../out/Y.pk','w'))
+
+    pickle.dump(X,open('../out/{0}/X.pk'.format(which_exp),'w'))
+    pickle.dump(Y,open('../out/{0}/Y.pk'.format(which_exp),'w'))
 
     
 if __name__ == "__main__":
-    get_dataframe()
+    get_features()
