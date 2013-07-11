@@ -4,6 +4,7 @@ import pandas as pd
 
 
 which_exp = 'nveMem'
+#which_exp = 'nveMemDonA'
 
 Y = pickle.load(open('../out/{0}/Y_proc.pk'.format(which_exp), 'r'))
 

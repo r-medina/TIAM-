@@ -5,7 +5,8 @@ import os
 
 from get_features import good_tracks, many_features, feature_names
 
-which_exp = 'nveMem'
+#which_exp = 'nveMem'
+which_exp = 'nveMemDonA'
 
 def plothists(X,Y,title,name):
     # get list of tracks and list of labels

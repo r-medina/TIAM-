@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
 import pickle
-from sklearn import preprocessing, svm, hmm, metrics, cross_validation
-
+from sklearn import preprocessing, svm, hmm, tree, ensemble, metrics, cross_validation
+import matplotlib.pyplot as plt
 
 which_exp = 'nveMem'
+#which_exp = 'nveMemDonA'
 
 # features
 X = pickle.load(open('../out/{0}/X.pk'.format(which_exp), 'r'))
@@ -73,5 +74,33 @@ svc.fit(x_scaled, y)
 y_svm = svc.predict(x_scaled)
 #Y_svm = pd.DataFrame(y_svm[:,None],index=Y.index, columns=['labels'])
 Y_svm = pd.DataFrame(y_svm[:,None], columns=['labels'])
-#performance = cross_validation.cross_val_score(svc, x_scaled, y, cv=kfold, n_jobs=-1)
 pickle.dump(Y_svm, open('../out/{0}/Y_svm.pk'.format(which_exp), 'w'))
+
+# run basic decision trees
+dtree = tree.DecisionTreeClassifier(criterion='entropy', min_samples_leaf=50, max_depth=3, compute_importances=True)
+performance = cross_validation.cross_val_score(dtree, x, y, cv=kfold, n_jobs=-1)
+print 'decision tree performance (mean, stdev) under 10-fold CV:'
+print performance.mean(), performance.std()
+
+dtree.fit(x, y)
+print pd.DataFrame(dtree.feature_importances_, columns=['Importance'], index=X.columns).sort(['Importance'], ascending=False)
+tree.export_graphviz(dtree, out_file='../out/{0}/dtree.dot'.format(which_exp), feature_names=X.columns)
+
+#run gradient boosting ensemble
+gbtree = ensemble.GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=5, random_state=0)
+performance = cross_validation.cross_val_score(gbtree, x, y, cv=kfold, n_jobs=-1)
+print 'gradient boosting ensemble performance (mean, stdev) under 10-fold CV:'
+print performance.mean(), performance.std()
+
+gbtree.fit(x,y)
+feature_importance = gbtree.feature_importances_
+feature_importance = 100.0 * (feature_importance / feature_importance.max())
+sorted_idx = np.argsort(feature_importance)
+pos = np.arange(sorted_idx.shape[0]) + .5
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 1, 1)
+plt.barh(pos, feature_importance[sorted_idx], align='center')
+plt.yticks(pos, X.columns[sorted_idx])
+plt.xlabel('Relative Importance')
+plt.title('Variable Importance')
+plt.show()

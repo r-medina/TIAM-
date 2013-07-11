@@ -3,7 +3,8 @@ import pickle
 import pandas as pd
 
 
-which_exp = 'nveMem'
+#which_exp = 'nveMem'
+which_exp = 'nveMemDonA'
 
 def accuracy(y_sup,y_pred):
     return 1 - (np.abs(y_sup - y_pred).sum() / y_sup.shape[0])
@@ -49,7 +50,7 @@ svm_conf, svm_sens, svm_spec = test(Y,Y_svm)
 def print_results(which,acc,conf,sens,spec):
     print which
     print "\taccuracy:\t{0:.4}".format(acc['labels'])
-    print "\tsensetivity:\t{0:.4}".format(sens)
+    print "\tsensitivity:\t{0:.4}".format(sens)
     print "\tspecificity:\t{0:.4}\n".format(spec)
 
 print_results('SVM',svm_acc,svm_conf,svm_sens,svm_spec)
