@@ -3,8 +3,8 @@ import pickle
 import pandas as pd
 
 
-#which_exp = 'nveMem'
-which_exp = 'nveMemDonA'
+which_exp = 'nveMem'
+#which_exp = 'nveMemDonA'
 
 def accuracy(y_sup,y_pred):
     return 1 - (np.abs(y_sup - y_pred).sum() / y_sup.shape[0])

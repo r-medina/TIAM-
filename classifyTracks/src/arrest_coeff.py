@@ -37,10 +37,10 @@ def test_arrest(threshold):
 	    predict_array = np.hstack([predict_array,prediction])
 
     predict_array = predict_array[1:]
-
+    print predict_array == Y['labels'].__array__()
     perf =  np.sum([int(x) for x in (predict_array == Y['labels'].__array__())])/float(len(predict_array))
     
     return perf
 
-for thresh in np.linspace(0,2,10):
-    print test_arrest(thresh)
+results = np.array([test_arrest(x) for x in np.linspace(0,2,100)])
+print np.max(results)

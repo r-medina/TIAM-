@@ -14,7 +14,6 @@ min_track_len = 20
 labels_dict = {}
 i = 0
 # grabs labels
-#for frame in glob('../../data/txtData/nveMemDonA/labels/viv/*'):
 for frame in glob('../../data/txtData/{0}/labels/*'.format(which_exp)):
     labels = pd.read_csv(frame, names=['labels'])
     # the keys in the labels_dict dictionary will the index of the
@@ -29,7 +28,6 @@ data_dict = {}
 data_head = ['x', 'y', 'footprint']
 i = 0
 # grabs TIAM data
-#for track in glob("../../data/txtData/nveMemDonA/data/attached/*"):
 for track in glob("../../data/txtData/{0}/data/orig/*".format(which_exp)):
     raw = pd.read_csv(track, names=data_head)
     if raw.__len__() >= min_track_len:
