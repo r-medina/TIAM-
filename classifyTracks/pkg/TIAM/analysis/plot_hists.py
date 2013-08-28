@@ -4,7 +4,7 @@ import pickle
 import os
 
 from get_features import good_tracks, many_features, feature_names
-from TIAM import WHICH_EXP
+from TIAM.config import WHICH_EXP
 
 
 def plot_hists(X,Y,title,name):

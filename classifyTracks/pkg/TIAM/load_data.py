@@ -1,5 +1,5 @@
 import pickle
-from TIAM.config import *
+from TIAM.config import WHICH_EXP
 
 # Loads the data to be used by the other parts of the package after
 # the features have been generated

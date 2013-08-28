@@ -4,8 +4,8 @@ import pickle
 from sklearn import preprocessing, svm, hmm, tree, ensemble, metrics, cross_validation
 import matplotlib.pyplot as plt
 
-from tiam.load_data import X, Y
-
+from TIAM.load_data import X, Y
+from TIAM.config import WHICH_EXP
 
 # clip range for each feature
 clip = {'straightness': [-1.0, 1.0],

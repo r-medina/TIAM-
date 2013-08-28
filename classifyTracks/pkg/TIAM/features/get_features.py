@@ -5,7 +5,7 @@ from glob import glob
 import pickle
 
 from TIAM.features import FeatureSpace as fs
-from TIAM.config import *
+from TIAM.config import WHICH_EXP
 
 min_track_len = 20
 labels_dict = {}

@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 import pandas as pd
 
-from TIAM+ import WHICH_EXP
+from TIAM.config import WHICH_EXP
 
 
 def accuracy(y_sup,y_pred):
