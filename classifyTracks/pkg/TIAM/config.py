@@ -1,1 +1,1 @@
-WHICH_EXP = 'nveMem'#nveMemDonA'
+WHICH_EXP = 'nveMemDonA'

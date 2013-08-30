@@ -3,11 +3,11 @@ import pandas as pd
 import pickle
 import os
 
-from get_features import good_tracks, many_features, feature_names
+from TIAM.features.get_features import good_tracks, many_features, feature_names
 from TIAM.config import WHICH_EXP
 
 
-def plot_hists(X,Y,title,name):
+def plot_hist(X,Y,title,name):
     # get list of tracks and list of labels
     xs = X.values
     ys = Y.values
@@ -38,16 +38,16 @@ def plot_hists(X,Y,title,name):
     pl.savefig("../out/{0}/{1}".format(WHICH_EXP,name),bbox_inches='tight')
 
 
-if __name__ == "__main__":
+def plot():
     # features
     X = pickle.load(open('../out/{0}/X.pk'.format(WHICH_EXP), 'r'))
     # labels
     Y = pickle.load(open('../out/{0}/Y_proc.pk'.format(WHICH_EXP), 'r'))
-    plot_hists(X,Y,'Human Labeled','supervised_hist')
+    plot_hist(X,Y,'Human Labeled','supervised_hist')
 
     Y = pickle.load(open('../out/{0}/Y_hmm.pk'.format(WHICH_EXP), 'r'))
     Y = (Y-1)*-1
-    plot_hists(X,Y,'HMM','hmm_hist')
+    plot_hist(X,Y,'HMM','hmm_hist')
 
     Y = pickle.load(open('../out/{0}/Y_svm.pk'.format(WHICH_EXP), 'r'))
-    plot_hists(X,Y,'SVM','svm_hist')
+    plot_hist(X,Y,'SVM','svm_hist')

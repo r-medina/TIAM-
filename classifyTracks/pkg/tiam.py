@@ -1,10 +1,20 @@
-import os, sys
+import argparse
 
-abspath = lambda *p: os.path.abspath(os.path.join(*p))
-PROJECT_ROOT = abspath(os.path.dirname(__file__))
-sys.path.insert(0,PROJECT_ROOT)
+parser = argparse.ArgumentParser(description='T-cell motility classifier')
+parser.add_argument('action', type=str, help='get_features, train, classify, test, plot, stability_index')
+parser.add_argument('-T','--training', metavar='', help='whether data is training data')
+args = parser.parse_args()
 
-#from TIAM import features, anaylsis
+if args.action not in ['get_features','train', 'test', 'classify', 'plot', 'stability_index']:
+    raise Exception('Invalid action. Please specify either get_freatures, train, test, classify, plot, or stability_index')
 
-#features.get_features()
-#analysis.analysis()
+from TIAM import features, analysis
+
+if args.action == 'get_features':
+    features.get_features()
+if args.action == 'train':
+    analysis.train()
+if args.action == 'plot':
+    analysis.plot()
+if args.action == 'stability_index':
+    analysis.stability_index()

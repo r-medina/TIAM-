@@ -6,13 +6,15 @@ import pickle
 
 from TIAM.features import FeatureSpace as fs
 from TIAM.config import WHICH_EXP
+from TIAM import mkdir
 
 min_track_len = 20
 labels_dict = {}
 i = 0
+mkdir.mkdir('../out/{0}'.format(WHICH_EXP))
+
+
 # grabs labels
-
-
 for frame in glob('../../data/txtData/{0}/labels/*'.format(WHICH_EXP)):
     labels = pd.read_csv(frame, names=['labels'])
     # the keys in the labels_dict dictionary will the index of the
@@ -40,7 +42,7 @@ data_panel = pd.Panel(data_dict)
 labels_panel = pd.Panel(labels_dict)
 
 feature_names = ['straightness', 'bending', 'efficiency', 'asymmetry',
-                 'skewness', 'kurtosis', 'disnpacement', 'confinement']
+                 'skewness', 'kurtosis', 'displacement', 'confinement']
 
 feat_space = fs.FeatureSpace()
 many_features = feat_space.many_features
