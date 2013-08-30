@@ -1,1 +1,2 @@
 WHICH_EXP = 'nveMemDonA'
+TIME_STEP = 0
