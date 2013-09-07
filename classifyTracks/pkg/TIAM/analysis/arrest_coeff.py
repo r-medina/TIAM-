@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 
 from TIAM.features import FeatureSpace as fs
-from TIAM.features.get_features import data_panel, good_tracks
+from TIAM.features.feature_setup import data_panel, good_tracks
 from TIAM.load_data import Y
 
 def classify_by_arrest_coeff(dist,threshold):

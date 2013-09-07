@@ -1,2 +1,4 @@
 WHICH_EXP = 'nveMemDonA'
-TIME_STEP = 0
+CLASSIFIER = 'nveMemDonA'
+WHICH_METHOD = 'gboosting'
+TIME_STEP = 30

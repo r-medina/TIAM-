@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 import os
 
-from TIAM.features.get_features import good_tracks, many_features, feature_names
+from TIAM.features.feature_setup import good_tracks, many_features, feature_names
 from TIAM.config import WHICH_EXP
 
 
