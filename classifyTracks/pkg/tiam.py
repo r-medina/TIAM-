@@ -18,8 +18,15 @@ from TIAM import features, analysis
 if args.action not in actions:
     raise Exception('Invalid action. Please specify either {0}, or {1}'.format(', '.join(actions[0:-1]),actions[-1]))
 
-try:
-    exec 'analysis.{0}()'.format(args.action)
-except:
-    exec 'features.{0}()'.format(args.action)
+
+if (args.action==get_features):
+    if args.training:
+	pass
+    else:
+	pass
+else:
+    try:
+	exec 'analysis.{0}()'.format(args.action)
+    except:
+	exec 'features.{0}()'.format(args.action)
 
