@@ -10,23 +10,16 @@ actions = ['get_features',
 
 parser = argparse.ArgumentParser(description='T-cell motility classifier')
 parser.add_argument('action', type=str, help=', '.join(actions))
-parser.add_argument('-T','--training', metavar='', help='whether data is training data', action='store_const',const=True)
+parser.add_argument('-L','--labeled', metavar='', help='whether data has supervised state labels. Assumed to be true for action=train', action='store_const',const=True)
 args = parser.parse_args()
 
-from TIAM import features, analysis
-
 if args.action not in actions:
-    raise Exception('Invalid action. Please specify either {0}, or {1}'.format(', '.join(actions[0:-1]),actions[-1]))
+    raise Exception('Invalid action. Run python tiam.py -h for more info.')
 
 
-if (args.action==get_features):
-    if args.training:
-	pass
-    else:
-	pass
-else:
-    try:
-	exec 'analysis.{0}()'.format(args.action)
-    except:
-	exec 'features.{0}()'.format(args.action)
+from TIAM.features import *
+from TIAM.analysis import *
 
+# because all the function in the features and analysis namespace are
+# global to this script, the following line executes the function
+exec '{0}(labeled={1})'.format(args.action,args.labeled)

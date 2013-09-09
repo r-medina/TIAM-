@@ -5,11 +5,12 @@ from glob import glob
 import pickle
 
 from TIAM.config import WHICH_EXP
-from TIAM.features import FeatureSpace as fs
+from TIAM import mkdir
 from TIAM.features.feature_setup import good_tracks, data_panel, feat_space, feature_names, labels_panel
 
 
-def get_features():
+def get_features(labeled=False):
+    mkdir.mkdir('../out/{0}'.format(WHICH_EXP))
     features_dict = {}
     for i in good_tracks:
         pos = np.array([data_panel[i].dropna(axis=0)['x'], \
@@ -25,25 +26,31 @@ def get_features():
     # we need the arrays to make histograms and such
     feat_array = np.vstack([features_panel[good_tracks[0]].dropna(axis=0)[:], \
                             features_panel[good_tracks[1]].dropna(axis=0)[:]])
-    label_array = np.hstack([labels_panel[good_tracks[0]].dropna(axis=0)['labels'],\
-                             labels_panel[good_tracks[1]].dropna(axis=0)['labels']])
+    if labeled:
+	label_array = np.hstack([labels_panel[good_tracks[0]].dropna(axis=0)['labels'],\
+				 labels_panel[good_tracks[1]].dropna(axis=0)['labels']])
     
     for i in good_tracks[2:]:
         feat_array = np.vstack([feat_array, \
                                 features_panel[i].dropna(axis=0)[:]])
-        label_array = np.hstack([label_array, \
-                                 labels_panel[i].dropna(axis=0)['labels']])
-    label_array = np.transpose(label_array)
+	if labeled:
+	    label_array = np.hstack([label_array, \
+				     labels_panel[i].dropna(axis=0)['labels']])
+    if labeled:
+	label_array = np.transpose(label_array)
 
     pairs = []
     for track in good_tracks:
-        for i in range(len(labels_panel[track].dropna(axis=0).index)):
+	for i in range(len(data_panel[track].dropna(axis=0).index)):
             pairs.append((track,i))
 
     multi = pd.MultiIndex.from_tuples(pairs, names=['track', 'frame'])
 
     X = pd.DataFrame(feat_array,index=multi,columns=feature_names)
-    Y = pd.DataFrame(label_array,index=multi,columns=['labels'])
-
     pickle.dump(X,open('../out/{0}/X.pk'.format(WHICH_EXP),'w'))
-    pickle.dump(Y,open('../out/{0}/Y.pk'.format(WHICH_EXP),'w'))
+
+    if labeled:
+	Y = pd.DataFrame(label_array,index=multi,columns=['labels'])
+	pickle.dump(Y,open('../out/{0}/Y.pk'.format(WHICH_EXP),'w'))	
+
+    pickle.dump(data_panel,open('../out/{0}/positions.pk'.format(WHICH_EXP),'w'))

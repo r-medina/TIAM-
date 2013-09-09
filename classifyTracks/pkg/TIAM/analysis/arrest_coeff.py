@@ -2,16 +2,14 @@ import numpy as np
 import pandas as pd
 import pickle
 
-from TIAM.features import FeatureSpace as fs
-from TIAM.features.feature_setup import data_panel, good_tracks
-from TIAM.load_data import Y
+from TIAM.features.feature_setup import data_panel, good_tracks, feat_space
+from TIAM.analysis import load_data
 
 def classify_by_arrest_coeff(dist,threshold):
     return [int(np.linalg.norm(x)>threshold) for x in dist]
 
-feat_space = fs.FeatureSpace()
-
 def test_arrest(threshold):
+    Y = load_data.Y()
     predict_dict = {}
 
     i = 0

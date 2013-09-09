@@ -3,8 +3,9 @@ import pandas as pd
 import pickle
 import os
 
-from TIAM.features.feature_setup import good_tracks, many_features, feature_names
 from TIAM.config import WHICH_EXP
+from TIAM.analysis import load_data
+from TIAM.features.feature_setup import good_tracks, many_features, feature_names
 
 
 def plot_hist(X,Y,title,name):
@@ -38,16 +39,12 @@ def plot_hist(X,Y,title,name):
     pl.savefig("../out/{0}/{1}".format(WHICH_EXP,name),bbox_inches='tight')
 
 
-def plot():
-    # features
-    X = pickle.load(open('../out/{0}/X.pk'.format(WHICH_EXP), 'r'))
-    # labels
-    Y = pickle.load(open('../out/{0}/Y_proc.pk'.format(WHICH_EXP), 'r'))
-    plot_hist(X,Y,'Human Labeled','supervised_hist')
+def plot(labeled=False):
+    Y_supervised = load_data.Y_supervised()
+    plot_hist(X,Y_supervised,'Human Labeled','supervised_hist')
 
-    Y = pickle.load(open('../out/{0}/Y_hmm.pk'.format(WHICH_EXP), 'r'))
-    Y = (Y-1)*-1
-    plot_hist(X,Y,'HMM','hmm_hist')
+    Y_hmm = load_data.Y_hmm()
+    plot_hist(X,Y_hmm,'HMM','hmm_hist')
 
-    Y = pickle.load(open('../out/{0}/Y_svm.pk'.format(WHICH_EXP), 'r'))
+    Y_svm = load_data.Ysvm()
     plot_hist(X,Y,'SVM','svm_hist')

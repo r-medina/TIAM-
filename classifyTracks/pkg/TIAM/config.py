@@ -1,4 +1,4 @@
-WHICH_EXP = 'nveMemDonA'
-CLASSIFIER = 'nveMemDonA'
-WHICH_METHOD = 'gboosting'
+WHICH_EXP = 'nveMem'
+WHICH_CLASSIFIER = 'nveMem'
+WHICH_METHOD = 'svm'
 TIME_STEP = 30
