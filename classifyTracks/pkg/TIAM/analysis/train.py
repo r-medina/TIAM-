@@ -5,11 +5,12 @@ from sklearn import preprocessing, svm, hmm, tree, ensemble, metrics, cross_vali
 import matplotlib.pyplot as plt
 
 from TIAM.config import WHICH_EXP
-
+from TIAM.analysis.classifier_setup import classifier_setup_labeled
 
 def train(labeled=False):
     assert labeled, 'Cannot train on unlabeled data'
-    from TIAM.analysis.classifier_setup import xs, x_scaled, y
+
+    xs, x_scaled, y = classifier_setup_labeled()
 
     # set up hmm
     hmmc = hmm.GaussianHMM(

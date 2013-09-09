@@ -40,11 +40,12 @@ def plot_hist(X,Y,title,name):
 
 
 def plot(labeled=False):
+    X = load_data.X()
     Y_supervised = load_data.Y_supervised()
     plot_hist(X,Y_supervised,'Human Labeled','supervised_hist')
 
     Y_hmm = load_data.Y_hmm()
     plot_hist(X,Y_hmm,'HMM','hmm_hist')
 
-    Y_svm = load_data.Ysvm()
-    plot_hist(X,Y,'SVM','svm_hist')
+    Y_svm = load_data.Y_svm()
+    plot_hist(X,Y_svm,'SVM','svm_hist')

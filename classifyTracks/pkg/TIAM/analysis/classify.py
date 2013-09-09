@@ -5,9 +5,14 @@ import pickle
 from TIAM.config import WHICH_EXP, WHICH_METHOD
 from TIAM.analysis import load_data
 from TIAM.analysis import load_classifier
+from TIAM.analysis.classifier_setup import classifier_setup_labeled, classifier_setup_unlabeled
+
 
 def classify(labeled=False):
-    from TIAM.analysis.classifier_setup import xs, x_scaled
+    if labeled:
+	xs, x_scaled, y = classifier_setup_labeled()
+    else:
+	xs, x_scaled = classifier_setup_unlabeled()
     hmmc = load_classifier.hmmc()
     svmc = load_classifier.svmc()
     y_hmm = [hmmc.decode(x)[1] for x in xs]
