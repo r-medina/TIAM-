@@ -1,0 +1,19 @@
+HMM
+	accuracy:	0.7269
+	sensitivity:	0.9867
+	specificity:	0.52
+SVM
+	accuracy:	0.9432
+	mean, stdev:	0.9377, 0.004562 (under 10-fold CV)
+	sensitivity:	0.9501
+	specificity:	0.9255
+DTree
+	accuracy:	1.0
+	mean, stdev:	0.9025, 0.004302 (under 10-fold CV)
+	sensitivity:	1.0
+	specificity:	0.0
+GBTree
+	accuracy:	1.0
+	mean, stdev:	0.9706, 0.004961 (under 10-fold CV)
+	sensitivity:	1.0
+	specificity:	0.0

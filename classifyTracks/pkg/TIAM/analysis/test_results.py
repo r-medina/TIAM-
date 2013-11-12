@@ -58,26 +58,18 @@ def test_results():
     dtree_conf, dtree_sens, dtree_spec = test(Y,Y_dtree)
     gbtree_conf, gbtree_sens, gbtree_spec = test(Y,Y_gbtree)
     
-    def print_results(which,acc,conf,sens,spec,perf=[]):
+    def results(which,acc,conf,sens,spec,perf=[]):
         try:
-            res = '{}\n\taccuracy:\t{:.4}\n\tmean, stdev:\t{:.4}, {:.4} (under 10-fold CV)\n\tsensitivity:\t{:.4}\n\tspecificity:\t{:.4}\n'.format(which,acc,perf.mean(),perf.std(),sens,spec)
+            return '{}\n\taccuracy:\t{:.4}\n\tmean, stdev:\t{:.4}, {:.4} (under 10-fold CV)\n\tsensitivity:\t{:.4}\n\tspecificity:\t{:.4}\n'.format(which,acc,perf.mean(),perf.std(),sens,spec)
         except:
-            res = '{}\n\taccuracy:\t{:.4}\n\tsensitivity:\t{:.4}\n\tspecificity:\t{:.4}\n'.format(which,acc,sens,spec)
-
-        with open('../out/{0}/performance.txt','w') as fo:
-            f.write(res)
-        # print which
-        # print '\taccuracy:\t{0:.4}'.format(acc)
-        # try:
-        #     print '\tmean, stdev:\t{0:.4}, {1:.4} (under 10-fold CV)'.format(perf.mean(),perf.std())
-        # except:
-        #     pass
-        # print "\tsensitivity:\t{0:.4}".format(sens)
-        # print "\tspecificity:\t{0:.4}\n".format(spec)
+            return '{}\n\taccuracy:\t{:.4}\n\tsensitivity:\t{:.4}\n\tspecificity:\t{:.4}\n'.format(which,acc,sens,spec)
     
-    print_results('HMM',hmm_acc,hmm_conf,hmm_sens,hmm_spec)
-    print_results('SVM',svm_acc,svm_conf,svm_sens,svm_spec,svmperf)
-    print_results('DTree',dtree_acc,dtree_conf,dtree_sens,dtree_spec,dtreeperf)
+    res = ''
+    res += results('HMM',hmm_acc,hmm_conf,hmm_sens,hmm_spec)
+    res += results('SVM',svm_acc,svm_conf,svm_sens,svm_spec,svmperf)
+    res += results('DTree',dtree_acc,dtree_conf,dtree_sens,dtree_spec,dtreeperf)
     # this is wildly overfit. don't know how to use best
     # cross-validated classifier instead
-    print_results('GBTree',gbtree_acc,gbtree_conf,gbtree_sens,gbtree_spec,gbtreeperf)
+    res += results('GBTree',gbtree_acc,gbtree_conf,gbtree_sens,gbtree_spec,gbtreeperf)
+    with open('../out/{0}/performance.txt'.format(WHICH_EXP),'w') as f:
+        f.write(res)
