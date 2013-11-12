@@ -1,12 +1,10 @@
 import pylab as pl
 import pandas as pd
-import pickle
-import os
 
 from TIAM.config import WHICH_EXP
 from TIAM.analysis import load_data
-from TIAM.features.feature_setup import good_tracks, many_features, feature_names
-
+#from TIAM.features.feature_setup import good_tracks, many_features, feature_names
+from TIAM.features.feature_setup import feature_names, many_features, feature_setup
 
 def plot_hist(X,Y,title,name):
     # get list of tracks and list of labels
@@ -41,9 +39,14 @@ def plot_hist(X,Y,title,name):
 
 def plot(labeled=False):
     X = load_data.X()
-    Y_supervised = load_data.Y_supervised()
-    plot_hist(X,Y_supervised,'Human Labeled','supervised_hist')
 
+    if labeled:
+        Y_supervised = load_data.Y_supervised()
+        good_tracks, data_panel,feat_space, feature_names, labels_panel = feature_setup(labeled)
+        plot_hist(X,Y_supervised,'Human Labeled','supervised_hist')
+    else:
+        good_tracks, data_panel,feat_space, feature_names = feature_setup(labeled)
+    
     Y_hmm = load_data.Y_hmm()
     plot_hist(X,Y_hmm,'HMM','hmm_hist')
 

@@ -5,7 +5,9 @@ print 'decision tree performance (mean, stdev) under 10-fold CV:'
 print performance.mean(), performance.std()
 
 dtree.fit(x, y)
-print pd.DataFrame(dtree.feature_importances_, columns=['Importance'], index=X.columns).sort(['Importance'], ascending=False)
+print pd.DataFrame(dtree.feature_importances_,
+                   columns=['Importance'],
+                   index=X.columns).sort(['Importance'], ascending=False)
 tree.export_graphviz(dtree, out_file='../out/{0}/dtree.dot'.format(WHICH_EXP), feature_names=X.columns)
 
 #run gradient boosting ensemble
