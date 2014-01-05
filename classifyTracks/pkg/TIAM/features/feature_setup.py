@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import scipy.io
 from glob import glob
 import pickle
 
@@ -42,7 +43,8 @@ def feature_setup(labeled=False):
     # keeps track of the indicies of good tracks
     good_tracks = data_dict.keys()
 
-    assert data_dict.keys(), 'There is no data in specified directory:\n\t../../data/txtData/{0}/data/orig/'.format(WHICH_EXP)
+    if not data_dict.keys():
+        raise IOError('There is no data in specified directory:\n\t../../data/txtData/{0}/data/orig/'.format(WHICH_EXP))
 
     # loads the data into a pandas panel
     data_panel = pd.Panel(data_dict)
@@ -54,4 +56,3 @@ def feature_setup(labeled=False):
         return good_tracks, data_panel,feat_space, feature_names, labels_panel
 
     return good_tracks, data_panel,feat_space, feature_names
-

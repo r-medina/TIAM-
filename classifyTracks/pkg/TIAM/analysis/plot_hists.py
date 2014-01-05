@@ -3,7 +3,6 @@ import pandas as pd
 
 from TIAM.config import WHICH_EXP
 from TIAM.analysis import load_data
-#from TIAM.features.feature_setup import good_tracks, many_features, feature_names
 from TIAM.features.feature_setup import feature_names, many_features, feature_setup
 
 def plot_hist(X,Y,title,name):

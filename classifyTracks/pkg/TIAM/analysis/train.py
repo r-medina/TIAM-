@@ -10,8 +10,9 @@ from TIAM.analysis.classify import classify
 from TIAM.analysis.test_results import test_results
 
 def train(labeled=False):
-    assert labeled, 'Cannot train on unlabeled data'
-    
+    if not labeled:
+        raise IOError('Cannot train on unlabeled data (include `-L flag`)')
+
     x, xs, x_scaled, y = classifier_setup_labeled()
     kfold = cross_validation.StratifiedKFold(y,10)
 

@@ -14,7 +14,7 @@ def get_features(labeled=False):
     if labeled:
         good_tracks, data_panel,feat_space, feature_names, labels_panel = feature_setup(labeled)
     else:
-        good_tracks, data_panel,feat_space, feature_names = feature_setup(labeled)
+        good_tracks, data_panel,feat_space, feature_names = feature_setup()
 
     features_dict = {}
     for i in good_tracks:
@@ -25,6 +25,7 @@ def get_features(labeled=False):
                                         columns=feature_names)
 
     features_panel = pd.Panel(features_dict)
+    cPickle.dump(features_panel,open('../out/{0}/testingkthx.pk'.format(WHICH_EXP),'w'))
 
     # make feat_array and label_arrays so that the following loop can
     # use vstack and hstack
